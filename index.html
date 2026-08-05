@@ -19,7 +19,7 @@
 
         /* Navbar / Header */
         header {
-            background-color: #ff6600; /* Warna khas e-commerce */
+            background-color: #ff6600;
             color: white;
             padding: 15px 5%;
             display: flex;
@@ -110,7 +110,7 @@
         /* Grid Produk */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             margin-bottom: 50px;
         }
@@ -126,15 +126,13 @@
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+        /* Style untuk gambar produk sungguhan */
         .product-image {
             width: 100%;
-            height: 200px;
+            height: 220px;
+            object-fit: cover; /* Biar gambar gak gepeng */
             background-color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9ca3af;
-            font-size: 3rem;
+            display: block;
         }
         .product-info {
             padding: 15px;
@@ -147,6 +145,7 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.4;
         }
         .product-price {
             font-size: 1.2rem;
@@ -185,14 +184,13 @@
 
         /* Responsif untuk layar HP kecil */
         @media (max-width: 600px) {
-            .search-bar { display: none; } /* Sembunyikan search di HP biar rapi */
+            .search-bar { display: none; }
             .hero h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Bagian Atas / Navigasi -->
     <header>
         <div class="logo">ReHan Shop</div>
         <div class="search-bar">
@@ -205,21 +203,20 @@
         </div>
     </header>
 
-    <!-- Banner Utama -->
     <div class="hero">
         <h1>Flash Sale Hingga 80%</h1>
         <p>Gratis Ongkir ke Seluruh Indonesia khusus hari ini!</p>
         <button>Klaim Voucher Sekarang</button>
     </div>
 
-    <!-- Daftar Produk -->
     <div class="container">
         <h2 class="section-title">Produk Terlaris</h2>
         
         <div class="product-grid">
             <!-- Produk 1 -->
             <div class="product-card">
-                <div class="product-image">📱</div>
+                <!-- Gambar pakai tag <img> -->
+                <img class="product-image" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80" alt="Smartphone">
                 <div class="product-info">
                     <div class="product-name">Smartphone X-Pro 5G RAM 8/256GB Garansi Resmi</div>
                     <div class="product-price">Rp 3.599.000</div>
@@ -230,7 +227,7 @@
 
             <!-- Produk 2 -->
             <div class="product-card">
-                <div class="product-image">🎧</div>
+                <img class="product-image" src="https://images.unsplash.com/photo-1590658268037-6f11a5b8222c?w=500&q=80" alt="TWS Earbuds">
                 <div class="product-info">
                     <div class="product-name">TWS Earbuds Bluetooth 5.3 Bass Boosted Anti Air</div>
                     <div class="product-price">Rp 149.000</div>
@@ -241,7 +238,7 @@
 
             <!-- Produk 3 -->
             <div class="product-card">
-                <div class="product-image">⌚</div>
+                <img class="product-image" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80" alt="Smartwatch">
                 <div class="product-info">
                     <div class="product-name">Smartwatch Fit Pro Monitor Detak Jantung Layar Amoled</div>
                     <div class="product-price">Rp 299.000</div>
@@ -252,7 +249,7 @@
 
             <!-- Produk 4 -->
             <div class="product-card">
-                <div class="product-image">👟</div>
+                <img class="product-image" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" alt="Sepatu Sneakers">
                 <div class="product-info">
                     <div class="product-name">Sepatu Sneakers Pria Kasual Original Ringan & Nyaman</div>
                     <div class="product-price">Rp 185.000</div>
@@ -263,7 +260,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2026 ReHan Shop. Belanja Aman & Terpercaya.</p>
     </footer>
