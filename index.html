@@ -71,74 +71,7 @@
         </div>
     </div>
 
-    <!-- 3. HALAMAN USER (E-COMMERCE) -->
-<!-- Bagian Tombol di Landing Page (index.html) -->
-<div class="role-buttons">
-    <!-- Klik ini langsung pindah ke user.html -->
-    <button class="btn btn-blue" onclick="window.location.href='user.html'">Masuk Sebagai User</button>
-    
-    <!-- 4. HALAMAN ADMIN -->
- <button class="btn btn-dark" onclick="window.location.href='admin.html'">Masuk Sebagai Admin</button>
 
-    <!-- LOGIC JAVASCRIPT -->
-    <script>
-        let peranSaatIni = ''; // Menyimpan status apakah yang mau login itu admin atau user
-
-        // Fungsi untuk membuka halaman login
-        function bukaLogin(peran) {
-            peranSaatIni = peran;
-            
-            // Ubah teks judul login
-            if(peran === 'admin') {
-                document.getElementById('login-title').innerText = 'Login Area Admin';
-                document.querySelector('.login-box .btn').className = 'btn btn-dark'; // Ubah warna tombol login
-            } else {
-                document.getElementById('login-title').innerText = 'Login Area Pelanggan';
-                document.querySelector('.login-box .btn').className = 'btn btn-blue';
-            }
-
-            // Pindah tampilan
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('login-page').classList.remove('hidden');
-        }
-
-        // Fungsi untuk memproses login
-        function prosesLogin(event) {
-            event.preventDefault(); // Mencegah web me-refresh saat tombol submit ditekan
-            
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-
-            // Logika untuk Admin
-            if (peranSaatIni === 'admin' && user === 'admin' && pass === 'admin123') {
-                document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('admin-dashboard').classList.remove('hidden');
-            } 
-            // Logika untuk User
-            else if (peranSaatIni === 'user' && user === 'user' && pass === 'user123') {
-                document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('user-dashboard').classList.remove('hidden');
-            } 
-            // Jika salah password
-            else {
-                alert('Username atau password salah! Cek kembali hurufnya.');
-            }
-        }
-
-        // Fungsi untuk Logout / Kembali ke awal
-        function kembaliKeAwal() {
-            // Sembunyikan semua halaman
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('user-dashboard').classList.add('hidden');
-            document.getElementById('admin-dashboard').classList.add('hidden');
-            
-            // Tampilkan halaman landing
-            document.getElementById('landing-page').classList.remove('hidden');
-            
-            // Kosongkan form input
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
     </script>
 
 </body>
