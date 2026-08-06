@@ -100,10 +100,6 @@
             position: relative;
             overflow: hidden;
         }
-        .hero-banner::after {
-            content: ''; position: absolute; right: -50px; bottom: -50px; width: 200px; height: 200px;
-            background: rgba(255, 255, 255, 0.1); border-radius: 50%; blur: 20px;
-        }
         .hero-text h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
         .hero-text p { font-size: 1rem; color: #c7d2fe; max-width: 500px; }
         .hero-badge { background: rgba(255, 255, 255, 0.2); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 12px; backdrop-filter: blur(5px); }
@@ -142,20 +138,26 @@
             font-size: 0.7rem; font-weight: 700;
             padding: 4px 10px; border-radius: 12px;
             text-transform: uppercase;
+            z-index: 2;
         }
+
+        /* Container Foto Barang */
         .product-img {
             width: 100%;
-            height: 180px;
+            height: 190px;
             background: #f1f5f9;
             border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
             margin: 10px 0 15px 0;
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
-        .product-card:hover .product-img { transform: scale(1.05); }
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .product-card:hover .product-img img { transform: scale(1.08); }
+
         .product-title { font-weight: 700; font-size: 1.05rem; color: var(--dark); margin-bottom: 4px; }
         .product-category { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
         .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
@@ -329,13 +331,48 @@
 
     <!-- LOGIKA JAVASCRIPT -->
     <script>
-        // Data Produk
+        // Data Produk dengan Link Foto Nyata (Unsplash HD)
         const products = [
-            { id: 1, nama: "Sepatu Sneakers Pria", kategori: "Fashion", harga: 250000, icon: "👟", tag: "Terlaris" },
-            { id: 2, nama: "Tas Ransel Laptop", kategori: "Aksesoris", harga: 150000, icon: "🎒", tag: "Diskon 20%" },
-            { id: 3, nama: "Smartwatch Fit Pro", kategori: "Elektronik", harga: 300000, icon: "⌚", tag: "Gadget" },
-            { id: 4, nama: "Kacamata Anti Radiasi", kategori: "Fashion", harga: 75000, icon: "👓", tag: "Populer" },
-            { id: 5, nama: "Headphone Bluetooth", kategori: "Elektronik", harga: 220000, icon: "🎧", tag: "New" }
+            { 
+                id: 1, 
+                nama: "Sepatu Sneakers Pria", 
+                kategori: "Fashion", 
+                harga: 250000, 
+                gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80", 
+                tag: "Terlaris" 
+            },
+            { 
+                id: 2, 
+                nama: "Tas Ransel Laptop", 
+                kategori: "Aksesoris", 
+                harga: 150000, 
+                gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80", 
+                tag: "Diskon 20%" 
+            },
+            { 
+                id: 3, 
+                nama: "Smartwatch Fit Pro", 
+                kategori: "Elektronik", 
+                harga: 300000, 
+                gambar: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80", 
+                tag: "Gadget" 
+            },
+            { 
+                id: 4, 
+                nama: "Kacamata Anti Radiasi", 
+                kategori: "Fashion", 
+                harga: 75000, 
+                gambar: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80", 
+                tag: "Populer" 
+            },
+            { 
+                id: 5, 
+                nama: "Headphone Bluetooth", 
+                kategori: "Elektronik", 
+                harga: 220000, 
+                gambar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80", 
+                tag: "New" 
+            }
         ];
 
         let cart = [];
@@ -354,7 +391,9 @@
                 card.innerHTML = `
                     <div>
                         <span class="product-tag">${p.tag}</span>
-                        <div class="product-img">${p.icon}</div>
+                        <div class="product-img">
+                            <img src="${p.gambar}" alt="${p.nama}" loading="lazy">
+                        </div>
                         <div class="product-title">${p.nama}</div>
                         <div class="product-category">${p.kategori}</div>
                     </div>
@@ -367,7 +406,7 @@
             });
         }
 
-        // Fitur 1: Tambah Barang ke Keranjang
+        // Tambah Barang ke Keranjang
         function tambahKeKeranjang(idProduk) {
             const produk = products.find(p => p.id === idProduk);
             const itemDiKeranjang = cart.find(item => item.id === idProduk);
@@ -381,7 +420,7 @@
             tampilkanToast(`"${produk.nama}" masuk ke keranjang!`);
         }
 
-        // Fitur 3: Membatalkan/Menghapus Barang dari Keranjang
+        // Menghapus/Membatalkan Barang dari Keranjang
         function hapusDariKeranjang(idProduk) {
             cart = cart.filter(item => item.id !== idProduk);
             updateCartUI();
@@ -425,7 +464,7 @@
             document.getElementById('checkout-total-price').innerText = formatRupiah(totalHarga);
         }
 
-        // Fitur 2: Alur Pembayaran / Checkout
+        // Checkout & Pembayaran
         function lanjutKeCheckout() {
             if (cart.length === 0) {
                 alert("Keranjang masih kosong, pilih produk terlebih dahulu!");
