@@ -53,7 +53,7 @@
         <h1>Selamat Datang di Toko Kita</h1>
         <p>Silakan pilih jalur masuk Anda untuk melanjutkan</p>
         <div class="role-buttons">
-            <button class="btn btn-blue" onclick="bukaLogin('user')">Masuk Sebagai User</button>
+            <button class="btn btn-blue" onclick="window.location.href='user.html'">Masuk Sebagai User</button>
             <button class="btn btn-dark" onclick="window.location.href='admin.html'">Masuk Sebagai Admin</button>
         </div>
     </div>
@@ -72,36 +72,11 @@
     </div>
 
     <!-- 3. HALAMAN USER (E-COMMERCE) -->
-    <div id="user-dashboard" class="hidden">
-        <div class="navbar navbar-user">
-            <h2>Toko Kita 🛒</h2>
-            <div>
-                <span style="margin-right: 15px;">Halo, User!</span>
-                <button class="btn btn-red" onclick="kembaliKeAwal()">Logout</button>
-            </div>
-        </div>
-        <div class="container">
-            <h2>Katalog Produk</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>Sepatu Kets</h3>
-                    <p style="color: #3b82f6; font-weight: bold; margin: 10px 0;">Rp 250.000</p>
-                    <button class="btn btn-blue">Beli Sekarang</button>
-                </div>
-                <div class="card">
-                    <h3>Tas Ransel</h3>
-                    <p style="color: #3b82f6; font-weight: bold; margin: 10px 0;">Rp 150.000</p>
-                    <button class="btn btn-blue">Beli Sekarang</button>
-                </div>
-                <div class="card">
-                    <h3>Jam Tangan</h3>
-                    <p style="color: #3b82f6; font-weight: bold; margin: 10px 0;">Rp 300.000</p>
-                    <button class="btn btn-blue">Beli Sekarang</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<!-- Bagian Tombol di Landing Page (index.html) -->
+<div class="role-buttons">
+    <!-- Klik ini langsung pindah ke user.html -->
+    <button class="btn btn-blue" onclick="window.location.href='user.html'">Masuk Sebagai User</button>
+    
     <!-- 4. HALAMAN ADMIN -->
  <button class="btn btn-dark" onclick="window.location.href='admin.html'">Masuk Sebagai Admin</button>
 
