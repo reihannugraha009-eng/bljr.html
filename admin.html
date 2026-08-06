@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Admin E-Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variabel & Reset */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --dark: #111827;
+            --sidebar: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border: #e5e7eb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--light); color: var(--dark); overflow-x: hidden; }
+        .hidden { display: none !important; }
+
+        /* Login Screen */
+        #login-screen {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1f2937, #111827);
+        }
+        .login-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-card h2 { text-align: center; margin-bottom: 25px; color: var(--dark); font-size: 1.5rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 15px; border: 1px solid var(--border); border-radius: 6px; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.2s; color: var(--white); display: inline-block; }
+        .btn-primary { background-color: var(--primary); width: 100%; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); }
+        .btn-success { background-color: var(--success); }
+
+        /* Admin Layout */
+        #admin-app { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: var(--sidebar); color: var(--white); display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; font-size: 1.2rem; font-weight: 700; border-bottom: 1px solid #374151; color: var(--white); text-align: center; }
+        .menu { flex-grow: 1; padding: 15px 0; }
+        .menu-item { padding: 12px 20px; display: block; color: #d1d5db; text-decoration: none; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .menu-item:hover, .menu-item.active { background-color: var(--primary); color: var(--white); }
+        .sidebar-footer { padding: 20px; border-top: 1px solid #374151; }
+
+        /* Main Content */
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        .topbar { background: var(--white); padding: 15px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .content-body { padding: 30px; }
+        
+        /* Cards & Grids */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        .card h3 { font-size: 0.9rem; color: #6b7280; margin-bottom: 10px; }
+        .card .value { font-size: 1.8rem; font-weight: 700; color: var(--dark); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: #f9fafb; font-weight: 600; font-size: 0.9rem; color: #4b5563; }
+        td { font-size: 0.9rem; }
+        .action-btn { padding: 6px 12px; font-size: 0.8rem; border-radius: 4px; background: var(--primary); color: white; border: none; cursor: pointer; }
+
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 500px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 1.2rem; font-weight: 600; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280; }
+
+        /* Utilities */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .report-filters { display: flex; gap: 15px; align-items: flex-end; background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: HALAMAN LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>Admin Portal</h2>
+            <form onsubmit="prosesLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login ke Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SECTION 2: APLIKASI ADMIN (Disembunyikan sebelum login) -->
+    <div id="admin-app" class="hidden">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                🛒 Panel Admin
+            </div>
+            <div class="menu">
+                <a class="menu-item active" onclick="bukaTab('dashboard', this)">📊 Dashboard</a>
+                <a class="menu-item" onclick="bukaTab('produk', this)">📦 Kelola Barang</a>
+                <a class="menu-item" onclick="bukaTab('laporan', this)">📈 Laporan Keuangan</a>
+            </div>
+            <div class="sidebar-footer">
+                <button class="btn btn-danger" style="width: 100%;" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2 id="page-title">Dashboard</h2>
+                <div>Halo, <strong>Admin</strong></div>
+            </div>
+
+            <div class="content-body">
+                
+                <!-- TAB: DASHBOARD -->
+                <div id="tab-dashboard" class="tab-content">
+                    <div class="grid-3">
+                        <div class="card">
+                            <h3>Total Barang (Katalog)</h3>
+                            <div class="value" id="stat-total-barang">0</div>
+                        </div>
+                        <div class="card">
+                            <h3>Total Transaksi</h3>
+                            <div class="value" id="stat-total-transaksi">0</div>
+                        </div>
+                        <div class="card">
+                            <h3>Pendapatan Keseluruhan</h3>
+                            <div class="value" id="stat-total-pendapatan">Rp 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: KELOLA BARANG (Input & View Detail) -->
+                <div id="tab-produk" class="tab-content hidden">
+                    <div class="flex-between">
+                        <h3>Daftar Barang</h3>
+                        <button class="btn btn-success" onclick="bukaModal('modal-tambah-barang')">+ Tambah Barang Baru</button>
+                    </div>
+                    <div class="card">
+                        <table id="tabel-barang">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama Barang</th>
+                                    <th>Kategori</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data barang akan di-render menggunakan JavaScript di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB: LAPORAN KEUANGAN -->
+                <div id="tab-laporan" class="tab-content hidden">
+                    <div class="report-filters">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Tanggal Awal</label>
+                            <input type="date" id="tgl-awal" class="form-control">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Tanggal Akhir</label>
+                            <input type="date" id="tgl-akhir" class="form-control">
+                        </div>
+                        <button class="btn btn-primary" onclick="filterLaporan()">Cari Laporan</button>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="card">
+                            <h3>Total Pemasukan (Periode Terpilih)</h3>
+                            <div class="value" id="laporan-total-uang" style="color: var(--success);">Rp 0</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <table id="tabel-laporan">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>No. Transaksi</th>
+                                    <th>Barang Terjual</th>
+                                    <th>Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data laporan akan di-render di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TAMBAH BARANG -->
+    <div id="modal-tambah-barang" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                Input Barang Baru
+                <button class="close-btn" onclick="tutupModal('modal-tambah-barang')">&times;</button>
+            </div>
+            <form onsubmit="simpanBarang(event)">
+                <div class="form-group">
+                    <label>Nama Barang</label>
+                    <input type="text" id="input-nama" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input type="text" id="input-kategori" class="form-control" required>
+                </div>
+                <div class="grid-3" style="gap: 15px; margin-bottom: 15px; grid-template-columns: 1fr 1fr;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Harga (Rp)</label>
+                        <input type="number" id="input-harga" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Stok Awal</label>
+                        <input type="number" id="input-stok" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi Tambahan</label>
+                    <input type="text" id="input-deskripsi" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 10px;">Simpan Barang</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: VIEW DETAIL BARANG -->
+    <div id="modal-detail-barang" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                Detail Barang
+                <button class="close-btn" onclick="tutupModal('modal-detail-barang')">&times;</button>
+            </div>
+            <div id="detail-konten" style="line-height: 1.8;">
+                <!-- Konten detail diisi via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIKA JAVASCRIPT -->
+    <script>
+        // === DATABASE SEMENTARA (MOCK DATA) ===
+        // Data ini akan mereset jika web di-refresh karena ini hanya frontend
+        let dataBarang = [
+            { id: "BRG-001", nama: "Sepatu Sneakers", kategori: "Sepatu", harga: 250000, stok: 15, deskripsi: "Sepatu kasual pria ukuran 42 warna hitam." },
+            { id: "BRG-002", nama: "Tas Ransel Anti Air", kategori: "Tas", harga: 150000, stok: 8, deskripsi: "Tas ransel bahan canvas anti air cocok untuk sekolah." }
+        ];
+
+        let dataTransaksi = [
+            { no: "TRX-101", tgl: "2026-08-01", barang: "Sepatu Sneakers", nominal: 250000 },
+            { no: "TRX-102", tgl: "2026-08-02", barang: "Tas Ransel Anti Air", nominal: 150000 },
+            { no: "TRX-103", tgl: "2026-08-05", barang: "Sepatu Sneakers", nominal: 250000 },
+            { no: "TRX-104", tgl: "2026-08-06", barang: "Kacamata Hitam", nominal: 75000 }
+        ];
+
+        // === FUNGSI FORMAT RUPIAH ===
+        const formatRupiah = (angka) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        };
+
+        // === FITUR 1: LOGIN SISTEM ===
+        function prosesLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            // Cek Username & Password sesuai permintaan
+            if (user === 'admin' && pass === '12345678') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-app').classList.remove('hidden');
+                refreshDashboard(); // Load data awal
+            } else {
+                alert('Gagal Login! Username atau Password salah.');
+            }
+        }
+
+        function logout() {
+            document.getElementById('admin-app').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // === FITUR NAVIGASI TAB ===
+        function bukaTab(tabName, element) {
+            // Sembunyikan semua tab content
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            // Hapus class active dari semua menu
+            document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            element.classList.add('active');
+            
+            // Ganti Judul
+            const titles = { 'dashboard': 'Dashboard', 'produk': 'Kelola Barang', 'laporan': 'Laporan Keuangan' };
+            document.getElementById('page-title').innerText = titles[tabName];
+
+            // Render ulang data jika buka tab tertentu
+            if(tabName === 'dashboard') refreshDashboard();
+            if(tabName === 'produk') renderTabelBarang();
+            if(tabName === 'laporan') filterLaporan(); // Render awal laporan
+        }
+
+        // === FITUR 2: DASHBOARD ADMIN ===
+        function refreshDashboard() {
+            document.getElementById('stat-total-barang').innerText = dataBarang.length;
+            document.getElementById('stat-total-transaksi').innerText = dataTransaksi.length;
+            
+            let totalPendapatan = dataTransaksi.reduce((total, trx) => total + trx.nominal, 0);
+            document.getElementById('stat-total-pendapatan').innerText = formatRupiah(totalPendapatan);
+        }
+
+        // === FITUR 3: INPUT BARANG ===
+        function simpanBarang(event) {
+            event.preventDefault();
+            
+            // Generate ID Barang Otomatis
+            const idBaru = "BRG-00" + (dataBarang.length + 1);
+            
+            const barangBaru = {
+                id: idBaru,
+                nama: document.getElementById('input-nama').value,
+                kategori: document.getElementById('input-kategori').value,
+                harga: parseInt(document.getElementById('input-harga').value),
+                stok: parseInt(document.getElementById('input-stok').value),
+                deskripsi: document.getElementById('input-deskripsi').value || "-"
+            };
+
+            dataBarang.push(barangBaru); // Masukkan ke database sementara
+            
+            tutupModal('modal-tambah-barang');
+            renderTabelBarang(); // Refresh tabel
+            alert("Barang berhasil ditambahkan!");
+            
+            // Reset Form
+            event.target.reset();
+        }
+
+        function renderTabelBarang() {
+            const tbody = document.querySelector('#tabel-barang tbody');
+            tbody.innerHTML = '';
+            
+            if(dataBarang.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada data barang</td></tr>';
+                return;
+            }
+
+            dataBarang.forEach(brg => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${brg.id}</strong></td>
+                    <td>${brg.nama}</td>
+                    <td>${brg.kategori}</td>
+                    <td style="color:var(--success); font-weight:600;">${formatRupiah(brg.harga)}</td>
+                    <td>${brg.stok} unit</td>
+                    <td>
+                        <button class="action-btn" onclick="lihatDetail('${brg.id}')">View Detail</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // === FITUR 4: VIEW DETAIL BARANG ===
+        function lihatDetail(idBarang) {
+            const barang = dataBarang.find(b => b.id === idBarang);
+            if(barang) {
+                const konten = `
+                    <p><strong>Kode Barang:</strong> ${barang.id}</p>
+                    <p><strong>Nama:</strong> ${barang.nama}</p>
+                    <p><strong>Kategori:</strong> ${barang.kategori}</p>
+                    <p><strong>Harga:</strong> ${formatRupiah(barang.harga)}</p>
+                    <p><strong>Stok Tersedia:</strong> ${barang.stok} unit</p>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #e5e7eb;">
+                    <p><strong>Deskripsi Tambahan:</strong><br>${barang.deskripsi}</p>
+                `;
+                document.getElementById('detail-konten').innerHTML = konten;
+                bukaModal('modal-detail-barang');
+            }
+        }
+
+        // === FITUR 5: LAPORAN KEUANGAN (BERDASARKAN TANGGAL) ===
+        function filterLaporan() {
+            const tglAwal = document.getElementById('tgl-awal').value;
+            const tglAkhir = document.getElementById('tgl-akhir').value;
+            
+            let dataFiltered = dataTransaksi;
+
+            // Jika admin mengisi filter tanggal
+            if(tglAwal && tglAkhir) {
+                dataFiltered = dataTransaksi.filter(trx => {
+                    return trx.tgl >= tglAwal && trx.tgl <= tglAkhir;
+                });
+            }
+
+            // Render ke tabel laporan
+            const tbody = document.querySelector('#tabel-laporan tbody');
+            tbody.innerHTML = '';
+            let totalUang = 0;
+
+            if(dataFiltered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada transaksi di tanggal tersebut</td></tr>';
+            } else {
+                dataFiltered.forEach(trx => {
+                    totalUang += trx.nominal;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${trx.tgl}</td>
+                        <td><strong>${trx.no}</strong></td>
+                        <td>${trx.barang}</td>
+                        <td>${formatRupiah(trx.nominal)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Update Total Uang di kartu atas tabel
+            document.getElementById('laporan-total-uang').innerText = formatRupiah(totalUang);
+        }
+
+        // === PENGENDALI MODAL ===
+        function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
+    </script>
+
+</body>
+</html>
