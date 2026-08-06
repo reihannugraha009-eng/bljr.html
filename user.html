@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Online - Area Pembeli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border: #e5e7eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--light); color: var(--dark); padding-bottom: 50px; }
+        .hidden { display: none !important; }
+
+        /* Navbar Header */
+        header {
+            background: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+        .nav-actions { display: flex; align-items: center; gap: 15px; }
+
+        .cart-btn {
+            background: var(--light);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        .cart-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+
+        /* Layout Main */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section-title { margin-bottom: 20px; font-size: 1.4rem; font-weight: 700; }
+
+        /* Grid Produk */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .product-img {
+            width: 100%;
+            height: 160px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        .product-title { font-weight: 600; font-size: 1rem; margin-bottom: 5px; }
+        .product-category { font-size: 0.8rem; color: #6b7280; margin-bottom: 10px; }
+        .product-price { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        .modal-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280; }
+
+        /* Item Keranjang */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-item-info h4 { font-size: 0.95rem; }
+        .cart-item-info p { font-size: 0.85rem; color: #6b7280; }
+        .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; margin: 20px 0; }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; }
+        select.form-control { cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">🛍️ ReHan Shop</div>
+        <div class="nav-actions">
+            <button class="cart-btn" onclick="bukaModal('modal-keranjang')">
+                🛒 Keranjang
+                <span class="cart-badge" id="cart-count">0</span>
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'">Keluar</button>
+        </div>
+    </header>
+
+    <!-- KONTEN UTAMA -->
+    <div class="container">
+        <h2 class="section-title">Katalog Produk</h2>
+        <div class="product-grid" id="product-list">
+            <!-- Produk di-render via JavaScript -->
+        </div>
+    </div>
+
+    <!-- MODAL 1: KERANJANG BELANJA -->
+    <div id="modal-keranjang" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Keranjang Belanja</h3>
+                <button class="close-btn" onclick="tutupModal('modal-keranjang')">&times;</button>
+            </div>
+            <div id="cart-items-container">
+                <!-- Item keranjang di-render di sini -->
+            </div>
+            <div class="cart-total">
+                <span>Total Pembayaran:</span>
+                <span id="cart-total-price" style="color: var(--primary);">Rp 0</span>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="lanjutKeCheckout()">Lanjut ke Pembayaran</button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FORM CHECKOUT & METODE PEMBAYARAN -->
+    <div id="modal-checkout" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Detail Pembayaran</h3>
+                <button class="close-btn" onclick="tutupModal('modal-checkout')">&times;</button>
+            </div>
+            <form onsubmit="prosesPesanan(event)">
+                <div class="form-group">
+                    <label>Nama Penerima</label>
+                    <input type="text" class="form-control" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div class="form-group">
+                    <label>Alamat Pengiriman</label>
+                    <input type="text" class="form-control" placeholder="Jl. Contoh No. 123, Kota..." required>
+                </div>
+                <div class="form-group">
+                    <label>Metode Pembayaran</label>
+                    <select class="form-control" id="payment-method" required>
+                        <option value="">-- Pilih Metode Pembayaran --</option>
+                        <option value="Transfer Bank BCA">Transfer Bank BCA</option>
+                        <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
+                        <option value="E-Wallet (GoPay / OVO / ShopeePay)">E-Wallet (GoPay / OVO / Dana)</option>
+                        <option value="COD (Bayar di Tempat)">COD (Bayar di Tempat)</option>
+                    </select>
+                </div>
+                <div class="cart-total">
+                    <span>Total Tagihan:</span>
+                    <span id="checkout-total-price" style="color: var(--primary);">Rp 0</span>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Konfirmasi & Bayar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOGIKA JAVASCRIPT -->
+    <script>
+        // Data Produk Katalog
+        const products = [
+            { id: 1, nama: "Sepatu Sneakers Pria", kategori: "Fashion", harga: 250000, icon: "👟" },
+            { id: 2, nama: "Tas Ransel Laptop", kategori: "Aksesoris", harga: 150000, icon: "🎒" },
+            { id: 3, nama: "Smartwatch Fit Pro", kategori: "Elektronik", harga: 300000, icon: "⌚" },
+            { id: 4, nama: "Kacamata Anti Radiasi", kategori: "Fashion", harga: 75000, icon: "👓" },
+            { id: 5, nama: "Headphone Bluetooth", kategori: "Elektronik", harga: 220000, icon: "🎧" }
+        ];
+
+        let cart = [];
+
+        const formatRupiah = (angka) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        };
+
+        // Render Katalog Produk
+        function renderProducts() {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '';
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="product-img">${p.icon}</div>
+                        <div class="product-title">${p.nama}</div>
+                        <div class="product-category">${p.kategori}</div>
+                    </div>
+                    <div>
+                        <div class="product-price">${formatRupiah(p.harga)}</div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="tambahKeKeranjang(${p.id})">+ Keranjang</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Fitur 1: Tambah Barang ke Keranjang
+        function tambahKeKeranjang(idProduk) {
+            const produk = products.find(p => p.id === idProduk);
+            const itemDiKeranjang = cart.find(item => item.id === idProduk);
+
+            if (itemDiKeranjang) {
+                itemDiKeranjang.qty += 1;
+            } else {
+                cart.push({ ...produk, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        // Fitur 3: Membatalkan/Menghapus Barang dari Keranjang
+        function hapusDariKeranjang(idProduk) {
+            cart = cart.filter(item => item.id !== idProduk);
+            updateCartUI();
+        }
+
+        // Update Tampilan Keranjang
+        function updateCartUI() {
+            // Hitung Jumlah Badge
+            const totalQty = cart.reduce((total, item) => total + item.qty, 0);
+            document.getElementById('cart-count').innerText = totalQty;
+
+            // Render Item Keranjang
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+
+            let totalHarga = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#6b7280; padding:20px 0;">Keranjang belanjaanmu kosong.</p>';
+            } else {
+                cart.forEach(item => {
+                    const subtotal = item.harga * item.qty;
+                    totalHarga += subtotal;
+
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <div class="cart-item-info">
+                            <h4>${item.nama}</h4>
+                            <p>${formatRupiah(item.harga)} x ${item.qty} = <strong>${formatRupiah(subtotal)}</strong></p>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 4px 8px; font-size:0.8rem;" onclick="hapusDariKeranjang(${item.id})">Hapus</button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('cart-total-price').innerText = formatRupiah(totalHarga);
+            document.getElementById('checkout-total-price').innerText = formatRupiah(totalHarga);
+        }
+
+        // Fitur 2: Alur Pembayaran / Checkout
+        function lanjutKeCheckout() {
+            if (cart.length === 0) {
+                alert("Keranjang masih kosong, pilih produk terlebih dahulu!");
+                return;
+            }
+            tutupModal('modal-keranjang');
+            bukaModal('modal-checkout');
+        }
+
+        function prosesPesanan(e) {
+            e.preventDefault();
+            const metode = document.getElementById('payment-method').value;
+            alert(`Pesanan berhasil dibuat!\n\nMetode Pembayaran: ${metode}\nTerima kasih telah berbelanja di ReHan Shop.`);
+            
+            // Kosongkan keranjang & tutup modal
+            cart = [];
+            updateCartUI();
+            tutupModal('modal-checkout');
+            e.target.reset();
+        }
+
+        // Pengendali Modal
+        function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // Inisialisasi awal
+        renderProducts();
+    </script>
+</body>
+</html>
