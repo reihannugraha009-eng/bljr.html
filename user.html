@@ -59,6 +59,14 @@
         
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--ink); }
         .form-control { width: 100%; padding: 10px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; margin-bottom: 15px; background: white; }
+        /* --- JURUS TAMPILAN HP UNTUK USER (KATALOG) --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; text-align: center; }
+            .hero-banner h1 { font-size: 1.6rem; }
+            .hero-banner p { font-size: 1rem; }
+            .search-container { justify-content: center; }
+            .search-input { max-width: 100%; width: 100%; }
+        }
     </style>
 </head>
 <body>
