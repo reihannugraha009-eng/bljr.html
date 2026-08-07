@@ -3,76 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Multi-Role</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>ReHan Shop ^v^</title>
+    <!-- Font Tulisan Tangan -->
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        /* CSS Dasar */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: #f3f4f6; color: #333; }
-        .hidden { display: none !important; }
+        :root {
+            --paper: #fdfbf7;
+            --ink: #2d3436;
+            --crayon-blue: #74b9ff;
+            --crayon-red: #ff7675;
+            --drawn-border: 3px solid var(--ink);
+            --drawn-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            --drawn-shadow: 5px 5px 0px var(--ink);
+        }
 
-        /* Tombol & Form */
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.2s; color: white; }
-        .btn-blue { background-color: #3b82f6; }
-        .btn-blue:hover { background-color: #2563eb; }
-        .btn-dark { background-color: #1f2937; }
-        .btn-dark:hover { background-color: #111827; }
-        .btn-red { background-color: #ef4444; }
-        .btn-red:hover { background-color: #dc2626; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Patrick Hand', cursive; }
         
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; outline: none; }
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        /* Halaman Utama (Landing Page) */
-        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #e0e7ff, #f3f4f6); }
-        #landing-page h1 { font-size: 2.5rem; color: #1e3a8a; margin-bottom: 10px; }
-        #landing-page p { color: #6b7280; margin-bottom: 30px; font-size: 1.1rem; }
-        .role-buttons { display: flex; gap: 15px; }
+        .landing-card {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: var(--drawn-border);
+            border-radius: var(--drawn-radius);
+            box-shadow: var(--drawn-shadow);
+        }
 
-        /* Halaman Login */
-        #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #e5e7eb; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .login-box h2 { margin-bottom: 20px; color: #1f2937; }
-        .back-btn { background: none; border: none; color: #6b7280; text-decoration: underline; cursor: pointer; margin-top: 15px; font-size: 0.9rem; }
+        .mascot {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--ink);
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: bounce 2s infinite ease-in-out;
+        }
 
-        /* Navbar Global */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .navbar-user { background-color: #3b82f6; }
-        .navbar-admin { background-color: #1f2937; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
-        /* Konten Dashboard */
-        .container { padding: 30px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
-        .card img { width: 100px; margin-bottom: 10px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: 1px; }
+        p { font-size: 1.2rem; margin-bottom: 30px; }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            display: block;
+            padding: 15px;
+            font-size: 1.3rem;
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: bold;
+            border: var(--drawn-border);
+            border-radius: var(--drawn-radius);
+            box-shadow: 3px 3px 0px var(--ink);
+            transition: all 0.1s ease;
+        }
+
+        .btn-user { background-color: var(--crayon-blue); }
+        .btn-admin { background-color: var(--crayon-red); }
+
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--ink);
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. HALAMAN UTAMA (LANDING PAGE) -->
-    <div id="landing-page">
-        <h1>Selamat Datang di Toko Kita</h1>
-        <p>Silakan pilih jalur masuk Anda untuk melanjutkan</p>
-        <div class="role-buttons">
-            <button class="btn btn-blue" onclick="window.location.href='user.html'">Masuk Sebagai User</button>
-            <button class="btn btn-dark" onclick="window.location.href='admin.html'">Masuk Sebagai Admin</button>
+    <div class="landing-card">
+        <div class="mascot">^v^</div>
+        <h1>Selamat Datang!</h1>
+        <p>Di ReHan Shop versi Crayon, tempat belanja paling asyik sedunia!</p>
+        
+        <div class="btn-container">
+            <a href="user.html" class="btn btn-user">🛍️ Masuk sebagai Pembeli</a>
+            <a href="admin.html" class="btn btn-admin">🛡️ Masuk sebagai Admin</a>
         </div>
     </div>
-
-    <!-- 2. HALAMAN LOGIN -->
-    <div id="login-page" class="hidden">
-        <div class="login-box">
-            <h2 id="login-title">Login</h2>
-            <form onsubmit="prosesLogin(event)">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" class="btn btn-blue" style="width: 100%;">Masuk</button>
-            </form>
-            <button class="back-btn" onclick="kembaliKeAwal()">Kembali ke Halaman Utama</button>
-        </div>
-    </div>
-
-
-    </script>
 
 </body>
 </html>
