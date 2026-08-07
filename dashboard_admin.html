@@ -54,6 +54,28 @@
         .btn-danger { background: var(--crayon-red); color: white; }
 
         .form-control { padding: 8px 12px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; background: white; cursor: pointer; }
+        /* --- JURUS TAMPILAN HP UNTUK ADMIN DASHBOARD --- */
+        @media (max-width: 768px) {
+            #admin-app { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                border-right: none; 
+                border-bottom: var(--drawn-border); 
+                box-shadow: 0 4px 0px var(--ink); 
+                padding: 15px; 
+            }
+            .sidebar-brand { margin-bottom: 10px; padding-bottom: 10px; }
+            .menu-item { text-align: center; margin-bottom: 5px; }
+            .main-content { padding: 15px; }
+            .header-title { font-size: 1.5rem; margin-top: 10px; }
+            
+            /* Supaya kotak tabel bisa digeser ke samping kalau kepanjangan */
+            .card-table { overflow-x: auto; padding: 15px; }
+            table { min-width: 500px; /* Memaksa tabel tetap lebar di dalam kotaknya */ }
+            
+            /* Input filter tanggal jadi numpuk ke bawah di HP */
+            input[type="date"] { width: 100%; }
+        }
     </style>
 </head>
 <body>
