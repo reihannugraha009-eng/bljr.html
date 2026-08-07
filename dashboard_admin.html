@@ -50,7 +50,10 @@
         
         .btn { padding: 8px 16px; border: var(--drawn-border); border-radius: var(--drawn-radius); cursor: pointer; font-size: 1.1rem; box-shadow: 2px 2px 0px var(--ink); background: white; font-weight: bold; transition: 0.1s; }
         .btn:active { transform: translate(2px, 2px); box-shadow: none; }
+        .btn-primary { background: var(--crayon-green); }
         .btn-danger { background: var(--crayon-red); color: white; }
+
+        .form-control { padding: 8px 12px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; background: white; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -61,6 +64,7 @@
             <div class="sidebar-brand">Buku Admin ^v^</div>
             <a class="menu-item active" onclick="bukaTab('dashboard', this)">🖍️ Coretan Utama</a>
             <a class="menu-item" onclick="bukaTab('produk', this)">📦 Lemari Barang</a>
+            <a class="menu-item" onclick="bukaTab('laporan', this)">🗓️ Buku Kas</a>
             <div style="margin-top: auto;">
                 <button class="btn btn-danger" style="width: 100%;" onclick="window.location.href='index.html'">Tutup Buku (Keluar)</button>
             </div>
@@ -74,17 +78,17 @@
             <div id="tab-dashboard" class="tab-content">
                 <div class="grid-3">
                     <div class="card-stat">
-                        <h3>Total Mainan</h3>
-                        <div class="value" id="stat-barang">3</div>
+                        <h3>Total Mainan di Lemari</h3>
+                        <div class="value" id="stat-barang">12</div>
                     </div>
                     <div class="card-stat">
-                        <h3>Uang Terkumpul</h3>
-                        <div class="value" id="stat-uang">Rp 0</div>
+                        <h3>Total Transaksi</h3>
+                        <div class="value" id="stat-transaksi">10</div>
                     </div>
                 </div>
 
                 <div class="card-table">
-                    <h3 style="margin-bottom: 15px;">Grafik Jualan 📈</h3>
+                    <h3 style="margin-bottom: 15px;">Grafik Jualan Mingguan 📈</h3>
                     <div style="height: 300px;">
                         <canvas id="chartGambar"></canvas>
                     </div>
@@ -111,23 +115,69 @@
                     </table>
                 </div>
             </div>
+
+            <!-- TAB 3: LAPORAN KEUANGAN DENGAN FILTER TANGGAL -->
+            <div id="tab-laporan" class="tab-content hidden">
+                <div class="card-table">
+                    <h3>Cari Catatan Uang 🔍</h3>
+                    <p style="margin-bottom: 15px; color: #555;">Pilih tanggal awal dan akhir (misal: tanggal 2 sampai 7)</p>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                        <input type="date" id="filter-mulai" class="form-control">
+                        <span style="font-weight: bold;">sampai</span>
+                        <input type="date" id="filter-akhir" class="form-control">
+                        <button class="btn btn-primary" onclick="filterUang()">Hitung Uang!</button>
+                        <button class="btn" style="background: var(--crayon-yellow);" onclick="tampilkanSemuaUang()">Tampil Semua</button>
+                    </div>
+
+                    <h2 style="margin: 15px 0;">Total Dapet: <span id="total-laporan" style="color: var(--crayon-red);">Rp 0</span></h2>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal Laku</th>
+                                <th>Barang Terjual</th>
+                                <th>Uang Masuk</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-laporan"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Set Chart.js Font to match our Crayon Style!
         Chart.defaults.font.family = "'Patrick Hand', cursive";
         Chart.defaults.font.size = 14;
         Chart.defaults.color = "#2d3436";
 
         let myChartInstance = null;
+        const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+
+        // Data Barang Lengkap
         let dataBarang = [
             { nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, stok: 15 },
             { nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, stok: 8 },
-            { nama: "Jam Tangan Robot", kategori: "Mainan", harga: 300000, stok: 10 }
+            { nama: "Jam Tangan Robot", kategori: "Mainan", harga: 300000, stok: 10 },
+            { nama: "Set Krayon 24 Warna", kategori: "Alat Tulis", harga: 45000, stok: 20 },
+            { nama: "Buku Gambar A3", kategori: "Alat Tulis", harga: 35000, stok: 18 },
+            { nama: "Botol Minum Dinosaurus", kategori: "Aksesoris", harga: 60000, stok: 12 }
         ];
 
-        const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        // Data Transaksi Dummy (Tanggal berurutan)
+        let dataTransaksi = [
+            { tgl: "2026-08-01", barang: "Sepatu Lari Kece", nominal: 250000 },
+            { tgl: "2026-08-02", barang: "Tas Sekolah Gede", nominal: 150000 },
+            { tgl: "2026-08-03", barang: "Set Krayon 24 Warna", nominal: 45000 },
+            { tgl: "2026-08-04", barang: "Buku Gambar A3", nominal: 35000 },
+            { tgl: "2026-08-05", barang: "Jam Tangan Robot", nominal: 300000 },
+            { tgl: "2026-08-06", barang: "Botol Minum Dinosaurus", nominal: 60000 },
+            { tgl: "2026-08-07", barang: "Sepatu Lari Kece", nominal: 250000 },
+            { tgl: "2026-08-09", barang: "Tas Sekolah Gede", nominal: 150000 },
+            { tgl: "2026-08-11", barang: "Buku Gambar A3", nominal: 35000 },
+            { tgl: "2026-08-15", barang: "Set Krayon 24 Warna", nominal: 45000 }
+        ];
 
         function bukaTab(tabName, element) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
@@ -144,21 +194,25 @@
                 document.getElementById('page-title').innerText = "Lemari Barang Kita";
                 renderTabelBarang();
             }
+            if(tabName === 'laporan') {
+                document.getElementById('page-title').innerText = "Buku Kas & Uang Jajan";
+                tampilkanSemuaUang();
+            }
         }
 
         function refreshDashboard() {
             document.getElementById('stat-barang').innerText = dataBarang.length;
-            document.getElementById('stat-uang').innerText = formatRupiah(700000); // Dummy data
+            document.getElementById('stat-transaksi').innerText = dataTransaksi.length;
 
             const ctx = document.getElementById('chartGambar').getContext('2d');
             if (myChartInstance) myChartInstance.destroy();
             myChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'],
+                    labels: ['Tgl 1', 'Tgl 2', 'Tgl 3', 'Tgl 4', 'Tgl 5', 'Tgl 6', 'Tgl 7'],
                     datasets: [{
-                        label: 'Uang Jajan Masuk',
-                        data: [150000, 200000, 50000, 300000, 700000],
+                        label: 'Grafik Jualan',
+                        data: [250000, 150000, 45000, 35000, 300000, 60000, 250000],
                         backgroundColor: '#ff7675',
                         borderColor: '#2d3436',
                         borderWidth: 3,
@@ -183,6 +237,60 @@
             });
         }
 
+        // --- FUNGSI FILTER LAPORAN KEUANGAN ---
+        function renderTabelLaporan(dataAkanDitampilkan) {
+            const tbody = document.getElementById('tabel-laporan');
+            tbody.innerHTML = '';
+            let total = 0;
+
+            if (dataAkanDitampilkan.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Yah, belum ada jualan di tanggal ini...</td></tr>`;
+                document.getElementById('total-laporan').innerText = "Rp 0";
+                return;
+            }
+
+            dataAkanDitampilkan.forEach(trx => {
+                total += trx.nominal;
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${trx.tgl}</strong></td>
+                        <td>${trx.barang}</td>
+                        <td style="color:var(--crayon-red); font-weight:bold;">${formatRupiah(trx.nominal)}</td>
+                    </tr>`;
+            });
+            document.getElementById('total-laporan').innerText = formatRupiah(total);
+        }
+
+        function filterUang() {
+            const tglMulai = document.getElementById('filter-mulai').value;
+            const tglAkhir = document.getElementById('filter-akhir').value;
+
+            if (!tglMulai || !tglAkhir) {
+                alert("Pilih dulu tanggal awal dan tanggal akhirnya ya! ^v^");
+                return;
+            }
+
+            if (tglMulai > tglAkhir) {
+                alert("Eh, tanggal awalnya nggak boleh lebih besar dari tanggal akhir dong!");
+                return;
+            }
+
+            const dataTersaring = dataTransaksi.filter(trx => {
+                // Membandingkan format tanggal YYYY-MM-DD
+                return trx.tgl >= tglMulai && trx.tgl <= tglAkhir;
+            });
+
+            renderTabelLaporan(dataTersaring);
+        }
+
+        function tampilkanSemuaUang() {
+            // Kosongkan input kalender biar rapi
+            document.getElementById('filter-mulai').value = "";
+            document.getElementById('filter-akhir').value = "";
+            renderTabelLaporan(dataTransaksi);
+        }
+
+        // Load awal saat web dibuka
         refreshDashboard();
     </script>
 </body>
