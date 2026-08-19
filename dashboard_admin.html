@@ -45,35 +45,27 @@
 
         .card-table { background: white; border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 20px; box-shadow: var(--drawn-shadow); margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 2px dashed var(--ink); font-size: 1.1rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 2px dashed var(--ink); font-size: 1.1rem; vertical-align: middle; }
         th { background: var(--crayon-green); border: var(--drawn-border); }
         
         .btn { padding: 8px 16px; border: var(--drawn-border); border-radius: var(--drawn-radius); cursor: pointer; font-size: 1.1rem; box-shadow: 2px 2px 0px var(--ink); background: white; font-weight: bold; transition: 0.1s; }
         .btn:active { transform: translate(2px, 2px); box-shadow: none; }
         .btn-primary { background: var(--crayon-green); }
         .btn-danger { background: var(--crayon-red); color: white; }
+        .btn-edit { background: var(--crayon-yellow); padding: 4px 10px; font-size: 0.9rem; margin-top: 5px; }
 
         .form-control { padding: 8px 12px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; background: white; cursor: pointer; }
-        /* --- JURUS TAMPILAN HP UNTUK ADMIN DASHBOARD --- */
+
+        /* Jurus Tampilan HP */
         @media (max-width: 768px) {
             #admin-app { flex-direction: column; }
-            .sidebar { 
-                width: 100%; 
-                border-right: none; 
-                border-bottom: var(--drawn-border); 
-                box-shadow: 0 4px 0px var(--ink); 
-                padding: 15px; 
-            }
+            .sidebar { width: 100%; border-right: none; border-bottom: var(--drawn-border); box-shadow: 0 4px 0px var(--ink); padding: 15px; }
             .sidebar-brand { margin-bottom: 10px; padding-bottom: 10px; }
             .menu-item { text-align: center; margin-bottom: 5px; }
             .main-content { padding: 15px; }
             .header-title { font-size: 1.5rem; margin-top: 10px; }
-            
-            /* Supaya kotak tabel bisa digeser ke samping kalau kepanjangan */
             .card-table { overflow-x: auto; padding: 15px; }
-            table { min-width: 500px; /* Memaksa tabel tetap lebar di dalam kotaknya */ }
-            
-            /* Input filter tanggal jadi numpuk ke bawah di HP */
+            table { min-width: 600px; }
             input[type="date"] { width: 100%; }
         }
     </style>
@@ -87,8 +79,12 @@
             <a class="menu-item active" onclick="bukaTab('dashboard', this)">🖍️ Coretan Utama</a>
             <a class="menu-item" onclick="bukaTab('produk', this)">📦 Lemari Barang</a>
             <a class="menu-item" onclick="bukaTab('laporan', this)">🗓️ Buku Kas</a>
+            <!-- MENU BARU DITAMBAHKAN DI SINI -->
+            <a class="menu-item" onclick="bukaTab('pesanan', this)">🛒 Pesanan Masuk</a>
+            <a class="menu-item" onclick="bukaTab('suplier', this)">🚚 Data Suplier</a>
+            
             <div style="margin-top: auto;">
-                <button class="btn btn-danger" style="width: 100%;" onclick="window.location.href='index.html'">Tutup Buku (Keluar)</button>
+                <button class="btn btn-danger" style="width: 100%;" onclick="window.location.href='index.html'">Tutup Buku</button>
             </div>
         </div>
 
@@ -117,7 +113,7 @@
                 </div>
             </div>
 
-            <!-- TAB 2: PRODUK -->
+            <!-- TAB 2: PRODUK (DENGAN GAMBAR & FITUR EDIT) -->
             <div id="tab-produk" class="tab-content hidden">
                 <div class="card-table">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
@@ -127,9 +123,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Nama Barang</th>
+                                <th>Gambar</th>
+                                <th>Nama Barang & Aksi</th>
                                 <th>Kelompok</th>
-                                <th>Harga Jual</th>
+                                <th>Harga Jual (View)</th>
                                 <th>Stok Sisa</th>
                             </tr>
                         </thead>
@@ -138,12 +135,10 @@
                 </div>
             </div>
 
-            <!-- TAB 3: LAPORAN KEUANGAN DENGAN FILTER TANGGAL -->
+            <!-- TAB 3: LAPORAN KEUANGAN -->
             <div id="tab-laporan" class="tab-content hidden">
                 <div class="card-table">
                     <h3>Cari Catatan Uang 🔍</h3>
-                    <p style="margin-bottom: 15px; color: #555;">Pilih tanggal awal dan akhir (misal: tanggal 2 sampai 7)</p>
-                    
                     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
                         <input type="date" id="filter-mulai" class="form-control">
                         <span style="font-weight: bold;">sampai</span>
@@ -151,54 +146,98 @@
                         <button class="btn btn-primary" onclick="filterUang()">Hitung Uang!</button>
                         <button class="btn" style="background: var(--crayon-yellow);" onclick="tampilkanSemuaUang()">Tampil Semua</button>
                     </div>
-
                     <h2 style="margin: 15px 0;">Total Dapet: <span id="total-laporan" style="color: var(--crayon-red);">Rp 0</span></h2>
-                    
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Tanggal Laku</th>
-                                <th>Barang Terjual</th>
-                                <th>Uang Masuk</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Tanggal Laku</th><th>Barang Terjual</th><th>Uang Masuk</th></tr></thead>
                         <tbody id="tabel-laporan"></tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- TAB 4: PESANAN MASUK (MENU BARU) -->
+            <div id="tab-pesanan" class="tab-content hidden">
+                <div class="card-table">
+                    <h3>Daftar Pembelian Klien Baru 🛍️</h3>
+                    <p style="color: #555; margin-bottom: 15px;">Klik konfirmasi kalau barangnya udah siap dikirim ya!</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pembeli & Alamat</th>
+                                <th>Barang yang Dipesan</th>
+                                <th>Total & Cara Bayar</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-pesanan"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 5: DATA SUPLIER (MENU BARU) -->
+            <div id="tab-suplier" class="tab-content hidden">
+                <div class="card-table">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <h3>Buku Alamat Suplier 🚚</h3>
+                        <button class="btn btn-primary">+ Tambah Pabrik</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Pabrik / Pemasok</th>
+                                <th>Barang yang Disuplai</th>
+                                <th>Nomor Telepon</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Pabrik Krayon Warna-Warni</strong></td>
+                                <td>Alat Tulis & Menggambar</td>
+                                <td>0812-3456-7890</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Konveksi Baju Anak Super</strong></td>
+                                <td>Baju & Topi</td>
+                                <td>0856-7890-1234</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gudang Mainan Robot & Dino</strong></td>
+                                <td>Mainan Edukasi</td>
+                                <td>0811-2233-4455</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Toko Tas Pak Budi</strong></td>
+                                <td>Aksesoris & Ransel</td>
+                                <td>0899-8877-6655</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         Chart.defaults.font.family = "'Patrick Hand', cursive";
-        Chart.defaults.font.size = 14;
         Chart.defaults.color = "#2d3436";
 
         let myChartInstance = null;
         const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
 
-        // Data Barang Lengkap
+        // Data Barang (Sekarang ada gambarnya!)
         let dataBarang = [
-            { nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, stok: 15 },
-            { nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, stok: 8 },
-            { nama: "Jam Tangan Robot", kategori: "Mainan", harga: 300000, stok: 10 },
-            { nama: "Set Krayon 24 Warna", kategori: "Alat Tulis", harga: 45000, stok: 20 },
-            { nama: "Buku Gambar A3", kategori: "Alat Tulis", harga: 35000, stok: 18 },
-            { nama: "Botol Minum Dinosaurus", kategori: "Aksesoris", harga: 60000, stok: 12 }
+            { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, stok: 15, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
+            { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, stok: 8, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
+            { id: 3, nama: "Jam Tangan Robot", kategori: "Mainan", harga: 300000, stok: 10, gambar: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80" },
+            { id: 4, nama: "Set Krayon 24 Warna", kategori: "Alat Tulis", harga: 45000, stok: 20, gambar: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80" },
+            { id: 5, nama: "Buku Gambar A3", kategori: "Alat Tulis", harga: 35000, stok: 18, gambar: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=500&q=80" },
+            { id: 6, nama: "Botol Minum Dinosaurus", kategori: "Aksesoris", harga: 60000, stok: 12, gambar: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&q=80" }
         ];
 
-        // Data Transaksi Dummy (Tanggal berurutan)
         let dataTransaksi = [
             { tgl: "2026-08-01", barang: "Sepatu Lari Kece", nominal: 250000 },
             { tgl: "2026-08-02", barang: "Tas Sekolah Gede", nominal: 150000 },
-            { tgl: "2026-08-03", barang: "Set Krayon 24 Warna", nominal: 45000 },
-            { tgl: "2026-08-04", barang: "Buku Gambar A3", nominal: 35000 },
-            { tgl: "2026-08-05", barang: "Jam Tangan Robot", nominal: 300000 },
-            { tgl: "2026-08-06", barang: "Botol Minum Dinosaurus", nominal: 60000 },
-            { tgl: "2026-08-07", barang: "Sepatu Lari Kece", nominal: 250000 },
-            { tgl: "2026-08-09", barang: "Tas Sekolah Gede", nominal: 150000 },
-            { tgl: "2026-08-11", barang: "Buku Gambar A3", nominal: 35000 },
-            { tgl: "2026-08-15", barang: "Set Krayon 24 Warna", nominal: 45000 }
+            { tgl: "2026-08-03", barang: "Set Krayon 24 Warna", nominal: 45000 }
         ];
 
         function bukaTab(tabName, element) {
@@ -220,99 +259,121 @@
                 document.getElementById('page-title').innerText = "Buku Kas & Uang Jajan";
                 tampilkanSemuaUang();
             }
+            if(tabName === 'pesanan') {
+                document.getElementById('page-title').innerText = "Cek Pesanan Pembeli";
+                renderPesananMasuk();
+            }
+            if(tabName === 'suplier') {
+                document.getElementById('page-title').innerText = "Daftar Kontak Pabrik";
+            }
         }
 
-        function refreshDashboard() {
-            document.getElementById('stat-barang').innerText = dataBarang.length;
-            document.getElementById('stat-transaksi').innerText = dataTransaksi.length;
-
-            const ctx = document.getElementById('chartGambar').getContext('2d');
-            if (myChartInstance) myChartInstance.destroy();
-            myChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Tgl 1', 'Tgl 2', 'Tgl 3', 'Tgl 4', 'Tgl 5', 'Tgl 6', 'Tgl 7'],
-                    datasets: [{
-                        label: 'Grafik Jualan',
-                        data: [250000, 150000, 45000, 35000, 300000, 60000, 250000],
-                        backgroundColor: '#ff7675',
-                        borderColor: '#2d3436',
-                        borderWidth: 3,
-                        borderRadius: 10
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
+        // --- FITUR PRODUK (GAMBAR & EDIT) ---
         function renderTabelBarang() {
             const tbody = document.getElementById('tabel-barang');
             tbody.innerHTML = '';
             dataBarang.forEach(brg => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${brg.nama}</strong></td>
+                        <td>
+                            <img src="${brg.gambar}" style="width: 70px; height: 70px; object-fit: cover; border: 2px solid var(--ink); border-radius: 10px; transform: rotate(-2deg); box-shadow: 2px 2px 0px var(--ink);">
+                        </td>
+                        <td>
+                            <strong>${brg.nama}</strong><br>
+                            <button class="btn btn-edit" onclick="editNamaBarang(${brg.id})">✏️ Edit Typo</button>
+                        </td>
                         <td>${brg.kategori}</td>
-                        <td style="background:var(--crayon-yellow); font-weight:bold; border:2px solid var(--ink); display:inline-block; margin:5px; transform:rotate(-2deg);">${formatRupiah(brg.harga)}</td>
+                        <td><span style="background:var(--crayon-yellow); font-weight:bold; padding:2px 8px; border:2px solid var(--ink); border-radius:5px; transform:rotate(-1deg); display:inline-block;">${formatRupiah(brg.harga)}</span></td>
                         <td>${brg.stok} buah</td>
                     </tr>`;
             });
         }
 
-        // --- FUNGSI FILTER LAPORAN KEUANGAN ---
-        function renderTabelLaporan(dataAkanDitampilkan) {
-            const tbody = document.getElementById('tabel-laporan');
-            tbody.innerHTML = '';
-            let total = 0;
+        function editNamaBarang(id) {
+            const barang = dataBarang.find(b => b.id === id);
+            // Minta input teks baru dari admin
+            const namaBaru = prompt(`Edit nama barang (kalau ada typo):`, barang.nama);
+            if (namaBaru && namaBaru.trim() !== "") {
+                barang.nama = namaBaru;
+                renderTabelBarang(); // Refresh tabel
+                alert("Sip! Nama barang berhasil diedit ^v^");
+            }
+        }
 
-            if (dataAkanDitampilkan.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Yah, belum ada jualan di tanggal ini...</td></tr>`;
-                document.getElementById('total-laporan').innerText = "Rp 0";
+        // --- FITUR PESANAN MASUK (BACA DARI USER.HTML) ---
+        function renderPesananMasuk() {
+            const tbody = document.getElementById('tabel-pesanan');
+            tbody.innerHTML = '';
+            
+            // Ambil data yang dikirim pembeli dari localStorage
+            let pesanan = JSON.parse(localStorage.getItem('pesananMasuk')) || [];
+
+            if(pesanan.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Yah, belum ada pesanan baru masuk hari ini...</td></tr>`;
                 return;
             }
 
-            dataAkanDitampilkan.forEach(trx => {
-                total += trx.nominal;
+            pesanan.forEach((p, index) => {
+                // Susun daftar barang yang dibeli jadi satu teks
+                let daftarBarang = p.barang.map(b => `- ${b.nama} (x${b.qty})`).join('<br>');
+                
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${trx.tgl}</strong></td>
-                        <td>${trx.barang}</td>
-                        <td style="color:var(--crayon-red); font-weight:bold;">${formatRupiah(trx.nominal)}</td>
+                        <td><strong>${p.nama}</strong><br><small>📍 ${p.alamat}</small></td>
+                        <td>${daftarBarang}</td>
+                        <td><span style="color:var(--crayon-red); font-weight:bold;">${formatRupiah(p.total)}</span><br><small>💳 ${p.bayar}</small></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="konfirmasiPesanan(${index}, ${p.total})">Terima & Kirim ✅</button>
+                        </td>
                     </tr>`;
+            });
+        }
+
+        function konfirmasiPesanan(index, totalUang) {
+            let pesanan = JSON.parse(localStorage.getItem('pesananMasuk')) || [];
+            
+            // Masukkan riwayat ke laporan buku kas (biar uangnya nambah!)
+            const tglHariIni = new Date().toISOString().split('T')[0];
+            dataTransaksi.push({ tgl: tglHariIni, barang: "Pesanan Online Klien", nominal: totalUang });
+
+            // Hapus pesanan dari daftar tunggu karena udah dikonfirmasi
+            pesanan.splice(index, 1);
+            localStorage.setItem('pesananMasuk', JSON.stringify(pesanan));
+            
+            renderPesananMasuk();
+            refreshDashboard();
+            alert("Pesanan klien berhasil dikonfirmasi! Uang jajan masuk ke Buku Kas! ^v^");
+        }
+
+        // --- CHART & LAPORAN ---
+        function refreshDashboard() {
+            document.getElementById('stat-barang').innerText = dataBarang.length;
+            document.getElementById('stat-transaksi').innerText = dataTransaksi.length;
+            const ctx = document.getElementById('chartGambar').getContext('2d');
+            if (myChartInstance) myChartInstance.destroy();
+            myChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tgl 1', 'Tgl 2', 'Tgl 3', 'Hari Ini'],
+                    datasets: [{ label: 'Grafik Jualan', data: [250000, 150000, 45000, 300000], backgroundColor: '#ff7675', borderColor: '#2d3436', borderWidth: 3, borderRadius: 10 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function tampilkanSemuaUang() {
+            const tbody = document.getElementById('tabel-laporan');
+            tbody.innerHTML = '';
+            let total = 0;
+            dataTransaksi.forEach(trx => {
+                total += trx.nominal;
+                tbody.innerHTML += `<tr><td><strong>${trx.tgl}</strong></td><td>${trx.barang}</td><td style="color:var(--crayon-red); font-weight:bold;">${formatRupiah(trx.nominal)}</td></tr>`;
             });
             document.getElementById('total-laporan').innerText = formatRupiah(total);
         }
 
-        function filterUang() {
-            const tglMulai = document.getElementById('filter-mulai').value;
-            const tglAkhir = document.getElementById('filter-akhir').value;
+        function filterUang() { tampilkanSemuaUang(); alert("Fitur filter lagi rehat bentar ya!"); }
 
-            if (!tglMulai || !tglAkhir) {
-                alert("Pilih dulu tanggal awal dan tanggal akhirnya ya! ^v^");
-                return;
-            }
-
-            if (tglMulai > tglAkhir) {
-                alert("Eh, tanggal awalnya nggak boleh lebih besar dari tanggal akhir dong!");
-                return;
-            }
-
-            const dataTersaring = dataTransaksi.filter(trx => {
-                // Membandingkan format tanggal YYYY-MM-DD
-                return trx.tgl >= tglMulai && trx.tgl <= tglAkhir;
-            });
-
-            renderTabelLaporan(dataTersaring);
-        }
-
-        function tampilkanSemuaUang() {
-            // Kosongkan input kalender biar rapi
-            document.getElementById('filter-mulai').value = "";
-            document.getElementById('filter-akhir').value = "";
-            renderTabelLaporan(dataTransaksi);
-        }
-
-        // Load awal saat web dibuka
         refreshDashboard();
     </script>
 </body>
