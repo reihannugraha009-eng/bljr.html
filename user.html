@@ -86,7 +86,7 @@
 
     <div class="container">
         <div class="search-container">
-            <input type="text" id="search-input" class="search-input" placeholder="Cari karya atau baju..." oninput="cariBarang()">
+            <input type="text" id="search-input" class="search-input" placeholder="Cari mainan atau baju..." oninput="cariBarang()">
         </div>
 
         <div class="product-grid" id="product-list"></div>
@@ -116,7 +116,7 @@
                 <label>Nama Kamu:</label>
                 <input type="text" class="form-control" required>
                 <label>Alamat Rumah:</label>
-                <input type="text" class="form-control" placeholder="Contoh: Kaliwungu, Jawa Tengah" required>
+                <input type="text" class="form-control" required>
                 <label>Cara Bayar:</label>
                 <select class="form-control" required>
                     <option value="">Pilih dulu ya...</option>
@@ -129,7 +129,7 @@
     </div>
 
     <script>
-        // 12 Barang Lama + 6 Barang Spesial Custom Baru
+        // 12 Barang yang udah ditambahin
         const products = [
             { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
             { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
@@ -142,15 +142,7 @@
             { id: 9, nama: "Jaket Tebal Kuning", kategori: "Baju", harga: 180000, gambar: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80" },
             { id: 10, nama: "Kotak Pensil Tingkat", kategori: "Alat Tulis", harga: 55000, gambar: "https://images.unsplash.com/photo-1590845947698-8924d7409b56?w=500&q=80" },
             { id: 11, nama: "Papan Tulis Mini", kategori: "Alat Tulis", harga: 40000, gambar: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80" },
-            { id: 12, nama: "Ransel Astronot", kategori: "Aksesoris", harga: 200000, gambar: "https://images.unsplash.com/photo-1622560480654-d96214ebc8ce?w=500&q=80" },
-            
-            // --- BARANG CUSTOM DITAMBAHKAN DI SINI ---
-            { id: 13, nama: "Karya Crayon Wajah ^v^", kategori: "Seni", harga: 50000, gambar: "https://images.unsplash.com/photo-1599508704512-2f19efd1e40a?w=500&q=80" },
-            { id: 14, nama: "Karya Nirmana Hitam Putih 10x10", kategori: "Seni", harga: 120000, gambar: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=500&q=80" },
-            { id: 15, nama: "Sketsa Tanaman Teknik Linier", kategori: "Seni", harga: 85000, gambar: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=500&q=80" },
-            { id: 16, nama: "Poster 6 Jenis Arsiran", kategori: "Edukasi", harga: 40000, gambar: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80" },
-            { id: 17, nama: "Modul Gerbang Logika (NAND, dll)", kategori: "Edukasi", harga: 75000, gambar: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80" },
-            { id: 18, nama: "Buku Rangkuman ALU & Rumus", kategori: "Edukasi", harga: 60000, gambar: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80" }
+            { id: 12, nama: "Ransel Astronot", kategori: "Aksesoris", harga: 200000, gambar: "https://images.unsplash.com/photo-1622560480654-d96214ebc8ce?w=500&q=80" }
         ];
 
         let cart = [];
