@@ -44,7 +44,6 @@
 
         /* Fitur Gambar Tabel & Input */
         .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid var(--ink); display: block;}
-        .filter-box { display: flex; gap: 15px; align-items: center; background: #eee; padding: 15px; border-radius: 10px; border: 2px dashed var(--ink); margin-bottom: 15px; }
         .input-drawn { border: 2px solid var(--ink); padding: 8px; border-radius: 8px; font-family: 'Patrick Hand', cursive; font-size: 1rem; outline: none; width: 100%; box-sizing: border-box;}
         
         /* Modal Edit */
@@ -52,6 +51,21 @@
         .modal-overlay.hidden { display: none !important; }
         .modal-card { background: var(--paper); border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 25px; width: 90%; max-width: 400px; box-shadow: 8px 8px 0px var(--ink); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed var(--ink); padding-bottom: 10px; }
+
+        /* --- KODE BARU UNTUK DASHBOARD / CORETAN UTAMA --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .stat-card { border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 20px; text-align: center; box-shadow: 4px 4px 0 var(--ink); transition: 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h2 { font-size: 2.2rem; margin: 10px 0; }
+        .stat-card p { font-size: 1.2rem; font-weight: bold; margin: 0; }
+        
+        .bg-yellow { background: var(--crayon-yellow); }
+        .bg-green { background: var(--crayon-green); }
+        .bg-blue { background: var(--crayon-blue); }
+        .bg-red { background: var(--crayon-red); color: white; }
+
+        .feature-list { margin-top: 15px; padding-left: 20px; font-size: 1.1rem; line-height: 1.8; }
+        .feature-list li { margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -60,8 +74,8 @@
         <div>
             <h2>Buku Admin ^v^</h2>
             <ul class="menu">
-                <li><a href="#" id="menu-coretan" onclick="bukaFitur('coretan')">✏️ Coretan Utama</a></li>
-                <li><a href="#" id="menu-lemari" class="active" onclick="bukaFitur('lemari')">📦 Lemari Barang</a></li>
+                <li><a href="#" id="menu-coretan" class="active" onclick="bukaFitur('coretan')">✏️ Coretan Utama</a></li>
+                <li><a href="#" id="menu-lemari" onclick="bukaFitur('lemari')">📦 Lemari Barang</a></li>
                 <li><a href="#" id="menu-kas" onclick="bukaFitur('kas')">🗓️ Buku Kas</a></li>
                 <li><a href="#" id="menu-pesanan" onclick="bukaFitur('pesanan')">🛒 Pesanan Masuk</a></li>
                 <li><a href="#" id="menu-suplier" onclick="bukaFitur('suplier')">🚚 Data Suplier</a></li>
@@ -72,17 +86,50 @@
 
     <div class="main-content">
         
-        <!-- FITUR 1: CORETAN UTAMA -->
-        <div id="fitur-coretan" class="halaman-fitur">
+        <!-- FITUR 1: CORETAN UTAMA (SUDAH DIPERBARUI) -->
+        <div id="fitur-coretan" class="halaman-fitur aktif">
             <h1 class="page-title">Coretan Utama</h1>
+            
+            <!-- Bagian Kotak Statistik -->
             <div class="table-container">
                 <h3>Selamat Datang Bos! 🎉</h3>
-                <p>Pilih menu di sebelah kiri untuk mengelola tokomu ya.</p>
+                <p>Ini adalah ringkasan singkat dari toko ReHan Shop milikmu hari ini:</p>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card bg-yellow">
+                        <p>📦 Total Barang</p>
+                        <h2 id="stat-barang">0</h2>
+                    </div>
+                    <div class="stat-card bg-green">
+                        <p>🛒 Pesanan</p>
+                        <h2 id="stat-pesanan">0</h2>
+                    </div>
+                    <div class="stat-card bg-blue">
+                        <p>💰 Pemasukan Kas</p>
+                        <h2 id="stat-kas">Rp 0</h2>
+                    </div>
+                    <div class="stat-card bg-red">
+                        <p>🚚 Mitra Suplier</p>
+                        <h2 id="stat-suplier">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Ringkasan Menu -->
+            <div class="table-container">
+                <h3>Peta Buku Panduan 🗺️</h3>
+                <ul class="feature-list">
+                    <li><strong>✏️ Coretan Utama:</strong> Halaman awal buat mantau kondisi toko (barang, pesanan, dan uang) secara kilat.</li>
+                    <li><strong>📦 Lemari Barang:</strong> Tempat kamu cek stok katalog dan ngedit harga atau nama barang kalau ada yang salah ketik.</li>
+                    <li><strong>🗓️ Buku Kas:</strong> Buku rahasia buat nyatet uang yang masuk dari pembeli dan uang yang keluar buat beli modal.</li>
+                    <li><strong>🛒 Pesanan Masuk:</strong> Daftar orang-orang yang udah bayar. Jangan lupa diklik tombolnya kalau barang udah dikirim!</li>
+                    <li><strong>🚚 Data Suplier:</strong> Buku kontak darurat buat nelpon bos pabrik kalau barang di lemarimu mulai habis.</li>
+                </ul>
             </div>
         </div>
 
         <!-- FITUR 2: LEMARI BARANG -->
-        <div id="fitur-lemari" class="halaman-fitur aktif">
+        <div id="fitur-lemari" class="halaman-fitur">
             <h1 class="page-title">Lemari Barang</h1>
             <div class="table-container">
                 <h3>Stok Barang Rehan Shop 📦</h3>
@@ -97,14 +144,12 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="tabel-barang">
-                        <!-- Data barang dimuat oleh JavaScript -->
-                    </tbody>
+                    <tbody id="tabel-barang"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FITUR 3: BUKU KAS (BARU DIISI) -->
+        <!-- FITUR 3: BUKU KAS -->
         <div id="fitur-kas" class="halaman-fitur">
             <h1 class="page-title">Buku Kas Uang</h1>
             <div class="table-container">
@@ -119,9 +164,7 @@
                             <th>Nominal</th>
                         </tr>
                     </thead>
-                    <tbody id="tabel-kas">
-                        <!-- Data kas dimuat oleh JavaScript -->
-                    </tbody>
+                    <tbody id="tabel-kas"></tbody>
                 </table>
             </div>
         </div>
@@ -141,14 +184,12 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="tabel-pesanan">
-                        <!-- Data pesanan dimuat oleh JavaScript -->
-                    </tbody>
+                    <tbody id="tabel-pesanan"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FITUR 5: DATA SUPLIER (BARU DIISI) -->
+        <!-- FITUR 5: DATA SUPLIER -->
         <div id="fitur-suplier" class="halaman-fitur">
             <h1 class="page-title">Data Suplier</h1>
             <div class="table-container">
@@ -163,9 +204,7 @@
                             <th>Alamat Pabrik/Toko</th>
                         </tr>
                     </thead>
-                    <tbody id="tabel-suplier">
-                        <!-- Data suplier dimuat oleh JavaScript -->
-                    </tbody>
+                    <tbody id="tabel-suplier"></tbody>
                 </table>
             </div>
         </div>
@@ -214,7 +253,6 @@
             { nama: "Konveksi Baju Ceria", kategori: "Baju & Jaket", kontak: "0811-2233-4455", alamat: "Jl. Benang Jahit No. 9" }
         ];
 
-        // --- DATA DEFAULT BARANG ---
         const defaultProducts = [
             { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
             { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
@@ -229,6 +267,27 @@
             { id: 11, nama: "Papan Tulis Mini", kategori: "Alat Tulis", harga: 40000, gambar: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80" },
             { id: 12, nama: "Ransel Astronot", kategori: "Aksesoris", harga: 200000, gambar: "https://images.unsplash.com/photo-1622560480654-d96214ebc8ce?w=500&q=80" }
         ];
+
+        // --- FUNGSI UPDATE DASHBOARD ---
+        function muatDashboard() {
+            // Hitung total barang
+            const katalog = JSON.parse(localStorage.getItem('katalogRehanShop')) || defaultProducts;
+            document.getElementById('stat-barang').innerText = katalog.length;
+
+            // Hitung pesanan masuk
+            const daftarPesanan = JSON.parse(localStorage.getItem('pesananRehanShop')) || [];
+            document.getElementById('stat-pesanan').innerText = daftarPesanan.length;
+
+            // Hitung total pemasukan (uang masuk)
+            let totalPemasukan = 0;
+            dummyKas.forEach(kas => {
+                if(kas.jenis === 'Pemasukan') totalPemasukan += kas.nominal;
+            });
+            document.getElementById('stat-kas').innerText = formatRupiah(totalPemasukan);
+
+            // Hitung jumlah suplier
+            document.getElementById('stat-suplier').innerText = dummySuplier.length;
+        }
 
         // --- FUNGSI LEMARI BARANG ---
         function dapatkanKatalog() {
@@ -366,6 +425,7 @@
         }
 
         // --- PANGGIL SEMUA FUNGSI SAAT HALAMAN DIMUAT ---
+        muatDashboard();
         muatBarang();
         muatPesanan();
         muatBukuKas();
