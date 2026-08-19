@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -28,7 +29,7 @@
         .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
         .page-title { background: var(--crayon-yellow); display: inline-block; padding: 10px 20px; border: var(--drawn-border); border-radius: var(--drawn-radius); box-shadow: 4px 4px 0 var(--ink); margin-bottom: 30px; font-size: 1.8rem; }
 
-        /* Tabel */
+        /* Tabel & Container */
         .table-container { background: white; border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 20px; box-shadow: 4px 4px 0 var(--ink); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { background: var(--crayon-green); border: 2px solid var(--ink); padding: 12px; text-align: left; }
@@ -37,6 +38,10 @@
         .btn-action { background: var(--crayon-yellow); border: 2px solid var(--ink); padding: 8px 12px; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 1rem; box-shadow: 2px 2px 0 var(--ink);}
         .btn-action:active { transform: translate(2px, 2px); box-shadow: none; }
         .btn-action.done { background: #ccc; box-shadow: none; cursor: not-allowed; }
+
+        /* Sembunyikan bagian yang bukan halaman aktif */
+        .halaman-fitur { display: none; }
+        .halaman-fitur.aktif { display: block; }
     </style>
 </head>
 <body>
@@ -45,43 +50,105 @@
         <div>
             <h2>Buku Admin ^v^</h2>
             <ul class="menu">
-                <li><a href="#">✏️ Coretan Utama</a></li>
-                <li><a href="#">📦 Lemari Barang</a></li>
-                <li><a href="#">🗓️ Buku Kas</a></li>
-                <li><a href="#" class="active">🛒 Pesanan Masuk</a></li>
-                <li><a href="#">🚚 Data Suplier</a></li>
+                <!-- Tambahkan fungsi onclick untuk memanggil JavaScript -->
+                <li><a href="#" id="menu-coretan" onclick="bukaFitur('coretan')">✏️ Coretan Utama</a></li>
+                <li><a href="#" id="menu-lemari" onclick="bukaFitur('lemari')">📦 Lemari Barang</a></li>
+                <li><a href="#" id="menu-kas" onclick="bukaFitur('kas')">🗓️ Buku Kas</a></li>
+                <li><a href="#" id="menu-pesanan" class="active" onclick="bukaFitur('pesanan')">🛒 Pesanan Masuk</a></li>
+                <li><a href="#" id="menu-suplier" onclick="bukaFitur('suplier')">🚚 Data Suplier</a></li>
             </ul>
         </div>
         <button class="btn-keluar" onclick="window.location.href='index.html'">Tutup Buku</button>
     </div>
 
     <div class="main-content">
-        <h1 class="page-title">Cek Pesanan Pembeli</h1>
-
-        <div class="table-container">
-            <h3>Daftar Pembelian Klien Baru 🛍️</h3>
-            <p>Klik konfirmasi kalau barangnya udah siap dikirim ya!</p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pembeli & Alamat</th>
-                        <th>Barang yang Dipesan</th>
-                        <th>Total & Cara Bayar</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="tabel-pesanan">
-                    <!-- Nanti data dari user.html muncul di sini -->
-                </tbody>
-            </table>
+        
+        <!-- FITUR 1: CORETAN UTAMA -->
+        <div id="fitur-coretan" class="halaman-fitur">
+            <h1 class="page-title">Coretan Utama</h1>
+            <div class="table-container">
+                <h3>Selamat Datang di Dasbor Admin! 🎉</h3>
+                <p>Ini adalah halaman utama. Nanti kamu bisa isi dengan ringkasan penjualan atau pengumuman penting di sini.</p>
+            </div>
         </div>
+
+        <!-- FITUR 2: LEMARI BARANG -->
+        <div id="fitur-lemari" class="halaman-fitur">
+            <h1 class="page-title">Lemari Barang</h1>
+            <div class="table-container">
+                <h3>Stok Barang Rehan Shop 📦</h3>
+                <p>Fitur untuk tambah, edit, atau hapus barang jualanmu akan ditaruh di sini.</p>
+            </div>
+        </div>
+
+        <!-- FITUR 3: BUKU KAS -->
+        <div id="fitur-kas" class="halaman-fitur">
+            <h1 class="page-title">Buku Kas Uang</h1>
+            <div class="table-container">
+                <h3>Catatan Keuangan 💰</h3>
+                <p>Di sini tempat mantau uang masuk dan uang keluar biat nggak tekor.</p>
+            </div>
+        </div>
+
+        <!-- FITUR 4: PESANAN MASUK (FITUR ASLI KAMU) -->
+        <!-- Kasih class 'aktif' biar halaman ini yang kebuka pertama kali saat di-refresh -->
+        <div id="fitur-pesanan" class="halaman-fitur aktif">
+            <h1 class="page-title">Cek Pesanan Pembeli</h1>
+            <div class="table-container">
+                <h3>Daftar Pembelian Klien Baru 🛍️</h3>
+                <p>Klik konfirmasi kalau barangnya udah siap dikirim ya!</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pembeli & Alamat</th>
+                            <th>Barang yang Dipesan</th>
+                            <th>Total & Cara Bayar</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-pesanan">
+                        <!-- Nanti data dari user.html muncul di sini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FITUR 5: DATA SUPLIER -->
+        <div id="fitur-suplier" class="halaman-fitur">
+            <h1 class="page-title">Data Suplier</h1>
+            <div class="table-container">
+                <h3>Daftar Pemasok Barang 🚚</h3>
+                <p>Tempat menyimpan kontak orang-orang yang sering setor barang ke toko kita.</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        // --- FUNGSI UNTUK PINDAH HALAMAN / FITUR ---
+        function bukaFitur(namaFitur) {
+            // 1. Sembunyikan semua halaman fitur
+            let semuaHalaman = document.querySelectorAll('.halaman-fitur');
+            semuaHalaman.forEach(halaman => {
+                halaman.classList.remove('aktif');
+            });
+
+            // 2. Hilangkan warna putih (class active) dari semua tombol menu sidebar
+            let semuaMenu = document.querySelectorAll('.menu a');
+            semuaMenu.forEach(menu => {
+                menu.classList.remove('active');
+            });
+
+            // 3. Tampilkan halaman yang dipilih dan beri warna putih pada menunya
+            document.getElementById('fitur-' + namaFitur).classList.add('aktif');
+            document.getElementById('menu-' + namaFitur).classList.add('active');
+        }
+
+
+        // --- FUNGSI PESANAN MASUK (KODINGAN LAMA KAMU) ---
         function muatPesanan() {
             const tbody = document.getElementById('tabel-pesanan');
-            // Cek kotak surat (localStorage) ada kiriman pesanan gak
             const daftarPesanan = JSON.parse(localStorage.getItem('pesananRehanShop')) || [];
 
             if (daftarPesanan.length === 0) {
@@ -89,7 +156,6 @@
                 return;
             }
 
-            // Kalau ada, kita gambar ulang tabelnya
             tbody.innerHTML = '';
             daftarPesanan.forEach((pesanan, index) => {
                 const isSelesai = pesanan.status === 'Sudah Dikirim';
@@ -112,9 +178,9 @@
 
         function selesaikanPesanan(index) {
             let daftarPesanan = JSON.parse(localStorage.getItem('pesananRehanShop')) || [];
-            daftarPesanan[index].status = 'Sudah Dikirim'; // Ganti statusnya
-            localStorage.setItem('pesananRehanShop', JSON.stringify(daftarPesanan)); // Simpen lagi
-            muatPesanan(); // Refresh tampilan tabelnya
+            daftarPesanan[index].status = 'Sudah Dikirim';
+            localStorage.setItem('pesananRehanShop', JSON.stringify(daftarPesanan));
+            muatPesanan();
             alert('Asyik! Barang udah meluncur ke pembeli! ^v^');
         }
 
