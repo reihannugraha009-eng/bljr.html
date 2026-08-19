@@ -7,43 +7,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
         :root {
-            --paper: #fdfbf7;
-            --ink: #2d3436;
-            --crayon-blue: #74b9ff;
-            --crayon-red: #ff7675;
-            --crayon-yellow: #ffeaa7;
-            --crayon-green: #55efc4;
+            --paper: #fdfbf7; --ink: #2d3436; --crayon-blue: #74b9ff;
+            --crayon-red: #ff7675; --crayon-yellow: #ffeaa7; --crayon-green: #55efc4;
             --drawn-border: 3px solid var(--ink);
             --drawn-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
             --drawn-shadow: 4px 4px 0px var(--ink);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Patrick Hand', cursive; }
         body { background-color: var(--paper); color: var(--ink); padding-bottom: 60px; background-image: radial-gradient(#d1d1d1 1px, transparent 1px); background-size: 20px 20px; }
         .hidden { display: none !important; }
 
-        /* Navbar */
         header { background: var(--crayon-yellow); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--drawn-border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
-        .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        
-        .btn { padding: 8px 16px; border: var(--drawn-border); border-radius: var(--drawn-radius); cursor: pointer; font-size: 1.1rem; box-shadow: 2px 2px 0px var(--ink); transition: 0.1s; background: white; color: var(--ink); font-weight: bold;}
+        .logo { font-size: 1.8rem; font-weight: bold; }
+        .btn { padding: 8px 16px; border: var(--drawn-border); border-radius: var(--drawn-radius); cursor: pointer; font-size: 1.1rem; box-shadow: 2px 2px 0px var(--ink); transition: 0.1s; background: white; font-weight: bold;}
         .btn:active { transform: translate(2px, 2px); box-shadow: none; }
         .btn-primary { background: var(--crayon-green); }
-        .btn-danger { background: var(--crayon-red); }
-
+        .btn-danger { background: var(--crayon-red); color: white; }
         .cart-badge { background: var(--crayon-red); color: white; padding: 2px 8px; border-radius: 50%; border: 2px solid var(--ink); margin-left: 5px; }
 
-        /* Banner */
         .hero-banner { background: var(--crayon-blue); margin: 25px 5%; padding: 30px; border: var(--drawn-border); border-radius: var(--drawn-radius); box-shadow: var(--drawn-shadow); text-align: center; }
         .hero-banner h1 { font-size: 2.2rem; }
         
         .container { max-width: 1200px; margin: 30px auto; padding: 0 5%; }
-        
-        /* Search */
         .search-container { margin-bottom: 20px; display: flex; justify-content: flex-end; }
-        .search-input { padding: 10px 20px; border: var(--drawn-border); border-radius: var(--drawn-radius); width: 100%; max-width: 300px; font-size: 1.1rem; outline: none; background: white; box-shadow: 2px 2px 0px var(--ink); }
+        .search-input { padding: 10px 20px; border: var(--drawn-border); border-radius: var(--drawn-radius); width: 100%; max-width: 300px; font-size: 1.1rem; outline: none; box-shadow: 2px 2px 0px var(--ink); }
 
-        /* Grid Produk */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         .product-card { background: white; border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 15px; display: flex; flex-direction: column; box-shadow: var(--drawn-shadow); transition: 0.2s; }
         .product-card:hover { transform: translateY(-5px) rotate(-1deg); }
@@ -51,22 +39,11 @@
         .product-title { font-size: 1.3rem; font-weight: bold; line-height: 1.2; }
         .product-price { font-size: 1.2rem; background: var(--crayon-yellow); display: inline-block; padding: 2px 8px; border: 2px solid var(--ink); border-radius: 10px; margin: 10px 0; transform: rotate(-2deg); }
 
-        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 200; }
         .modal-card { background: var(--paper); border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 25px; width: 90%; max-width: 450px; box-shadow: 8px 8px 0px var(--ink); max-height: 80vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed var(--ink); padding-bottom: 10px; }
-        .modal-header h3 { font-size: 1.6rem; }
-        
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--ink); }
-        .form-control { width: 100%; padding: 10px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; margin-bottom: 15px; background: white; }
-        /* --- JURUS TAMPILAN HP UNTUK USER (KATALOG) --- */
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 15px; text-align: center; }
-            .hero-banner h1 { font-size: 1.6rem; }
-            .hero-banner p { font-size: 1rem; }
-            .search-container { justify-content: center; }
-            .search-input { max-width: 100%; width: 100%; }
-        }
+        .form-control { width: 100%; padding: 10px; border: 2px solid var(--ink); border-radius: 10px; outline: none; font-size: 1.1rem; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -88,7 +65,6 @@
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="Cari mainan atau baju..." oninput="cariBarang()">
         </div>
-
         <div class="product-grid" id="product-list"></div>
     </div>
 
@@ -112,13 +88,13 @@
                 <h3>Kirim ke mana nih? 📦</h3>
                 <button class="btn btn-danger" onclick="tutupModal('modal-checkout')">X</button>
             </div>
-            <form onsubmit="prosesPesanan(event)">
+            <form id="form-checkout" onsubmit="prosesPesanan(event)">
                 <label>Nama Kamu:</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" id="nama-pembeli" required>
                 <label>Alamat Rumah:</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" id="alamat-pembeli" required>
                 <label>Cara Bayar:</label>
-                <select class="form-control" required>
+                <select class="form-control" id="cara-bayar" required>
                     <option value="">Pilih dulu ya...</option>
                     <option>Uang Kertas (COD)</option>
                     <option>Transfer Celengan (Bank)</option>
@@ -129,7 +105,6 @@
     </div>
 
     <script>
-        // 12 Barang yang udah ditambahin
         const products = [
             { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
             { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
@@ -175,10 +150,7 @@
             alert(`Yey! ${p.nama} masuk ke tas! ^v^`);
         }
 
-        function hapusDariKeranjang(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-        }
+        function hapusDariKeranjang(id) { cart = cart.filter(item => item.id !== id); updateCartUI(); }
 
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.reduce((tot, item) => tot + item.qty, 0);
@@ -186,8 +158,7 @@
             container.innerHTML = '';
             let total = 0;
             cart.forEach(item => {
-                const sub = item.harga * item.qty;
-                total += sub;
+                const sub = item.harga * item.qty; total += sub;
                 container.innerHTML += `
                     <div class="cart-item">
                         <div><strong>${item.nama}</strong> (x${item.qty})</div>
@@ -205,8 +176,35 @@
             tutupModal('modal-keranjang'); bukaModal('modal-checkout');
         }
 
+        // INI BAGIAN YANG BARU! Ngirim data pesanan ke Admin
         function prosesPesanan(e) {
             e.preventDefault();
+            
+            // Ambil data yang diketik user
+            const nama = document.getElementById('nama-pembeli').value;
+            const alamat = document.getElementById('alamat-pembeli').value;
+            const caraBayar = document.getElementById('cara-bayar').value;
+            const totalHarga = document.getElementById('cart-total-price').innerText;
+
+            // Kumpulin list barangnya
+            const daftarBarang = cart.map(item => `- ${item.nama} (x${item.qty})`).join('<br>');
+
+            // Bikin bungkus pesanannya
+            const pesananBaru = {
+                id: Date.now(),
+                pembeli: nama,
+                alamat: alamat,
+                barang: daftarBarang,
+                total: totalHarga,
+                pembayaran: caraBayar,
+                status: 'Belum Dikirim'
+            };
+
+            // Simpen ke "kurir" localStorage
+            let semuaPesanan = JSON.parse(localStorage.getItem('pesananRehanShop')) || [];
+            semuaPesanan.push(pesananBaru);
+            localStorage.setItem('pesananRehanShop', JSON.stringify(semuaPesanan));
+
             alert("Hore! Barang kamu segera dikirim! Terima kasih ^v^");
             cart = []; updateCartUI(); tutupModal('modal-checkout'); e.target.reset();
         }
