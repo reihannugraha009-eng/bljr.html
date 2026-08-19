@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <!-- FITUR 2: LEMARI BARANG (SUDAH DISINKRONKAN DENGAN HALAMAN USER) -->
+        <!-- FITUR 2: LEMARI BARANG -->
         <div id="fitur-lemari" class="halaman-fitur aktif">
             <h1 class="page-title">Lemari Barang</h1>
             <div class="table-container">
@@ -98,18 +98,31 @@
                         </tr>
                     </thead>
                     <tbody id="tabel-barang">
-                        <!-- Data barang akan dimuat oleh JavaScript di sini -->
+                        <!-- Data barang dimuat oleh JavaScript -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FITUR 3: BUKU KAS -->
+        <!-- FITUR 3: BUKU KAS (BARU DIISI) -->
         <div id="fitur-kas" class="halaman-fitur">
             <h1 class="page-title">Buku Kas Uang</h1>
             <div class="table-container">
                 <h3>Catatan Keuangan 💰</h3>
-                <p>Fitur kas sedang diistirahatkan sejenak.</p>
+                <p>Rekap uang masuk dan keluar minggu ini.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th>Jenis</th>
+                            <th>Nominal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-kas">
+                        <!-- Data kas dimuat oleh JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -129,18 +142,31 @@
                         </tr>
                     </thead>
                     <tbody id="tabel-pesanan">
-                        <!-- Data dari localStorage -->
+                        <!-- Data pesanan dimuat oleh JavaScript -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FITUR 5: DATA SUPLIER -->
+        <!-- FITUR 5: DATA SUPLIER (BARU DIISI) -->
         <div id="fitur-suplier" class="halaman-fitur">
             <h1 class="page-title">Data Suplier</h1>
             <div class="table-container">
                 <h3>Daftar Pemasok Barang 🚚</h3>
-                <p>Kontak suplier langganan.</p>
+                <p>Daftar kontak suplier langganan kalau mau restock barang.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Toko / Suplier</th>
+                            <th>Kategori Barang</th>
+                            <th>Nomor Kontak (WA)</th>
+                            <th>Alamat Pabrik/Toko</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-suplier">
+                        <!-- Data suplier dimuat oleh JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -171,7 +197,24 @@
     </div>
 
     <script>
-        // --- DATA DEFAULT BARANG (Sama persis dengan user.html) ---
+        const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+
+        // --- DATA BOHONGAN (DUMMY) UNTUK KAS & SUPLIER ---
+        const dummyKas = [
+            { tanggal: "17-08-2026", keterangan: "Restock Krayon & Buku", jenis: "Pengeluaran", nominal: 250000 },
+            { tanggal: "18-08-2026", keterangan: "Penjualan Tas Sekolah", jenis: "Pemasukan", nominal: 150000 },
+            { tanggal: "18-08-2026", keterangan: "Beli Kardus Packing", jenis: "Pengeluaran", nominal: 45000 },
+            { tanggal: "19-08-2026", keterangan: "Penjualan Jam Tangan Robot", jenis: "Pemasukan", nominal: 300000 }
+        ];
+
+        const dummySuplier = [
+            { nama: "Toko Alat Tulis Makmur", kategori: "Alat Tulis & Crayon", kontak: "0812-3456-7890", alamat: "Jl. Pensil Warna No. 1, Semarang" },
+            { nama: "Pabrik Tas Keren", kategori: "Aksesoris & Tas", kontak: "0856-7890-1234", alamat: "Kawasan Industri Ransel" },
+            { nama: "Grosir Mainan Anak", kategori: "Mainan Edukasi", kontak: "0899-1122-3344", alamat: "Pasar Johar Baru" },
+            { nama: "Konveksi Baju Ceria", kategori: "Baju & Jaket", kontak: "0811-2233-4455", alamat: "Jl. Benang Jahit No. 9" }
+        ];
+
+        // --- DATA DEFAULT BARANG ---
         const defaultProducts = [
             { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
             { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
@@ -187,11 +230,8 @@
             { id: 12, nama: "Ransel Astronot", kategori: "Aksesoris", harga: 200000, gambar: "https://images.unsplash.com/photo-1622560480654-d96214ebc8ce?w=500&q=80" }
         ];
 
-        const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
-
-        // --- FUNGSI LEMARI BARANG (RENDER & EDIT) ---
+        // --- FUNGSI LEMARI BARANG ---
         function dapatkanKatalog() {
-            // Cek apakah data barang sudah ada di localStorage, kalau belum pakai data default
             let katalog = JSON.parse(localStorage.getItem('katalogRehanShop'));
             if (!katalog || katalog.length === 0) {
                 katalog = defaultProducts;
@@ -204,7 +244,6 @@
             const tbody = document.getElementById('tabel-barang');
             const katalog = dapatkanKatalog();
             tbody.innerHTML = '';
-            
             katalog.forEach(barang => {
                 tbody.innerHTML += `
                     <tr>
@@ -212,9 +251,7 @@
                         <td><strong>${barang.nama}</strong></td>
                         <td>${barang.kategori}</td>
                         <td>${formatRupiah(barang.harga)}</td>
-                        <td>
-                            <button class="btn-action" onclick="bukaModalEdit(${barang.id})">✏️ Edit</button>
-                        </td>
+                        <td><button class="btn-action" onclick="bukaModalEdit(${barang.id})">✏️ Edit</button></td>
                     </tr>
                 `;
             });
@@ -223,54 +260,37 @@
         function bukaModalEdit(id) {
             const katalog = dapatkanKatalog();
             const barang = katalog.find(b => b.id === id);
-            
-            // Isi form dengan data barang yang dipilih
             document.getElementById('edit-id').value = barang.id;
             document.getElementById('edit-nama').value = barang.nama;
             document.getElementById('edit-kategori').value = barang.kategori;
             document.getElementById('edit-harga').value = barang.harga;
-            
-            // Tampilkan Modal
             document.getElementById('modal-edit').classList.remove('hidden');
         }
 
-        function tutupModalEdit() {
-            document.getElementById('modal-edit').classList.add('hidden');
-        }
+        function tutupModalEdit() { document.getElementById('modal-edit').classList.add('hidden'); }
 
         function simpanEditBarang(e) {
             e.preventDefault();
             const id = parseInt(document.getElementById('edit-id').value);
-            const namaBaru = document.getElementById('edit-nama').value;
-            const kategoriBaru = document.getElementById('edit-kategori').value;
-            const hargaBaru = parseInt(document.getElementById('edit-harga').value);
-
             let katalog = dapatkanKatalog();
-            
-            // Cari barangnya dan update datanya
             const index = katalog.findIndex(b => b.id === id);
+            
             if (index !== -1) {
-                katalog[index].nama = namaBaru;
-                katalog[index].kategori = kategoriBaru;
-                katalog[index].harga = hargaBaru;
-                
-                // Simpan lagi ke localStorage
+                katalog[index].nama = document.getElementById('edit-nama').value;
+                katalog[index].kategori = document.getElementById('edit-kategori').value;
+                katalog[index].harga = parseInt(document.getElementById('edit-harga').value);
                 localStorage.setItem('katalogRehanShop', JSON.stringify(katalog));
                 
                 tutupModalEdit();
-                muatBarang(); // Refresh tabel
+                muatBarang();
                 alert('Sip! Datanya udah berhasil diubah ^v^');
             }
         }
 
         // --- FUNGSI PINDAH HALAMAN ---
         function bukaFitur(namaFitur) {
-            let semuaHalaman = document.querySelectorAll('.halaman-fitur');
-            semuaHalaman.forEach(halaman => halaman.classList.remove('aktif'));
-
-            let semuaMenu = document.querySelectorAll('.menu a');
-            semuaMenu.forEach(menu => menu.classList.remove('active'));
-
+            document.querySelectorAll('.halaman-fitur').forEach(h => h.classList.remove('aktif'));
+            document.querySelectorAll('.menu a').forEach(m => m.classList.remove('active'));
             document.getElementById('fitur-' + namaFitur).classList.add('aktif');
             document.getElementById('menu-' + namaFitur).classList.add('active');
         }
@@ -295,8 +315,7 @@
                         <td><strong>${pesanan.total}</strong><br><small>${pesanan.pembayaran}</small></td>
                         <td>
                             <button class="btn-action ${isSelesai ? 'done' : ''}" 
-                                    onclick="selesaikanPesanan(${index})" 
-                                    ${isSelesai ? 'disabled' : ''}>
+                                    onclick="selesaikanPesanan(${index})" ${isSelesai ? 'disabled' : ''}>
                                 ${isSelesai ? '✅ Selesai' : 'Kirim Sekarang!'}
                             </button>
                         </td>
@@ -313,9 +332,44 @@
             alert('Asyik! Barang udah meluncur ke pembeli! ^v^');
         }
 
-        // Langsung panggil fungsi saat halaman pertama kali dibuka
-        muatPesanan();
+        // --- FUNGSI RENDER DATA KAS & SUPLIER ---
+        function muatBukuKas() {
+            const tbody = document.getElementById('tabel-kas');
+            tbody.innerHTML = '';
+            dummyKas.forEach(kas => {
+                const warnaTeks = kas.jenis === 'Pemasukan' ? 'var(--ink)' : 'red';
+                const bgWarna = kas.jenis === 'Pemasukan' ? 'var(--crayon-green)' : 'var(--crayon-red)';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${kas.tanggal}</td>
+                        <td><strong>${kas.keterangan}</strong></td>
+                        <td><span style="background: ${bgWarna}; color: ${kas.jenis === 'Pemasukan' ? 'var(--ink)' : 'white'}; padding: 4px 8px; border-radius: 8px; font-weight: bold; border: 2px solid var(--ink);">${kas.jenis}</span></td>
+                        <td style="color: ${warnaTeks}; font-weight: bold;">${formatRupiah(kas.nominal)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function muatDataSuplier() {
+            const tbody = document.getElementById('tabel-suplier');
+            tbody.innerHTML = '';
+            dummySuplier.forEach(sup => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${sup.nama}</strong></td>
+                        <td>${sup.kategori}</td>
+                        <td>📞 ${sup.kontak}</td>
+                        <td>${sup.alamat}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- PANGGIL SEMUA FUNGSI SAAT HALAMAN DIMUAT ---
         muatBarang();
+        muatPesanan();
+        muatBukuKas();
+        muatDataSuplier();
     </script>
 </body>
 </html>
