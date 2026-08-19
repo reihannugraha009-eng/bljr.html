@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -33,7 +32,7 @@
         .table-container { background: white; border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 20px; box-shadow: 4px 4px 0 var(--ink); margin-bottom: 20px;}
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { background: var(--crayon-green); border: 2px solid var(--ink); padding: 12px; text-align: left; }
-        td { border: 2px dashed var(--ink); padding: 12px; border-bottom: 1px dashed #ccc;}
+        td { border: 2px dashed var(--ink); padding: 12px; border-bottom: 1px dashed #ccc; vertical-align: middle;}
         
         .btn-action { background: var(--crayon-yellow); border: 2px solid var(--ink); padding: 8px 12px; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 1rem; box-shadow: 2px 2px 0 var(--ink);}
         .btn-action:active { transform: translate(2px, 2px); box-shadow: none; }
@@ -43,17 +42,16 @@
         .halaman-fitur { display: none; }
         .halaman-fitur.aktif { display: block; }
 
-        /* Tambahan CSS Baru untuk Fitur */
-        .stats-container { display: flex; gap: 20px; margin-bottom: 20px; }
-        .stat-card { background: white; border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 20px; flex: 1; text-align: center; box-shadow: 4px 4px 0 var(--ink); }
-        .stat-card h3 { color: var(--crayon-red); font-size: 2.5rem; margin-top: 10px; }
-        .stat-card.blue { background: var(--crayon-blue); }
-        .stat-card.green { background: var(--crayon-green); }
-        
+        /* Fitur Gambar Tabel & Input */
+        .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid var(--ink); display: block;}
         .filter-box { display: flex; gap: 15px; align-items: center; background: #eee; padding: 15px; border-radius: 10px; border: 2px dashed var(--ink); margin-bottom: 15px; }
-        .input-drawn { border: 2px solid var(--ink); padding: 8px; border-radius: 8px; font-family: 'Patrick Hand', cursive; font-size: 1rem; outline: none; }
-        .teks-merah { color: red; font-weight: bold;}
-        .teks-hijau { color: green; font-weight: bold;}
+        .input-drawn { border: 2px solid var(--ink); padding: 8px; border-radius: 8px; font-family: 'Patrick Hand', cursive; font-size: 1rem; outline: none; width: 100%; box-sizing: border-box;}
+        
+        /* Modal Edit */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 200; }
+        .modal-overlay.hidden { display: none !important; }
+        .modal-card { background: var(--paper); border: var(--drawn-border); border-radius: var(--drawn-radius); padding: 25px; width: 90%; max-width: 400px; box-shadow: 8px 8px 0px var(--ink); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed var(--ink); padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -63,9 +61,9 @@
             <h2>Buku Admin ^v^</h2>
             <ul class="menu">
                 <li><a href="#" id="menu-coretan" onclick="bukaFitur('coretan')">✏️ Coretan Utama</a></li>
-                <li><a href="#" id="menu-lemari" onclick="bukaFitur('lemari')">📦 Lemari Barang</a></li>
+                <li><a href="#" id="menu-lemari" class="active" onclick="bukaFitur('lemari')">📦 Lemari Barang</a></li>
                 <li><a href="#" id="menu-kas" onclick="bukaFitur('kas')">🗓️ Buku Kas</a></li>
-                <li><a href="#" id="menu-pesanan" class="active" onclick="bukaFitur('pesanan')">🛒 Pesanan Masuk</a></li>
+                <li><a href="#" id="menu-pesanan" onclick="bukaFitur('pesanan')">🛒 Pesanan Masuk</a></li>
                 <li><a href="#" id="menu-suplier" onclick="bukaFitur('suplier')">🚚 Data Suplier</a></li>
             </ul>
         </div>
@@ -77,94 +75,46 @@
         <!-- FITUR 1: CORETAN UTAMA -->
         <div id="fitur-coretan" class="halaman-fitur">
             <h1 class="page-title">Coretan Utama</h1>
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h4>Pendapatan Bulan Ini</h4>
-                    <h3>Rp 4.500.000</h3>
-                </div>
-                <div class="stat-card blue">
-                    <h4>Pesanan Sukses</h4>
-                    <h3>32 Box</h3>
-                </div>
-                <div class="stat-card green">
-                    <h4>Pengunjung Toko</h4>
-                    <h3>128 Orang</h3>
-                </div>
-            </div>
             <div class="table-container">
-                <h3>Pengumuman Penting! 📢</h3>
-                <p>Jangan lupa untuk restock barang dari Bang Jago di akhir bulan ini ya. Stok sepatu lari tinggal dikit!</p>
+                <h3>Selamat Datang Bos! 🎉</h3>
+                <p>Pilih menu di sebelah kiri untuk mengelola tokomu ya.</p>
             </div>
         </div>
 
-        <!-- FITUR 2: LEMARI BARANG -->
-        <div id="fitur-lemari" class="halaman-fitur">
+        <!-- FITUR 2: LEMARI BARANG (SUDAH DISINKRONKAN DENGAN HALAMAN USER) -->
+        <div id="fitur-lemari" class="halaman-fitur aktif">
             <h1 class="page-title">Lemari Barang</h1>
             <div class="table-container">
                 <h3>Stok Barang Rehan Shop 📦</h3>
-                <button class="btn-action" style="margin-bottom: 15px;">+ Tambah Barang Baru</button>
+                <p>Katalog barang yang sama dengan yang dilihat pembeli. Klik Edit kalau ada typo!</p>
                 <table>
                     <thead>
                         <tr>
+                            <th>Gambar</th>
                             <th>Nama Barang</th>
                             <th>Kategori</th>
                             <th>Harga Jual</th>
-                            <th>Sisa Stok</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td>Sepatu Lari Kece</td><td>Sepatu</td><td>Rp 250.000</td><td><strong>5</strong></td><td><button class="btn-action">Edit</button></td></tr>
-                        <tr><td>Jaket Tahan Banting</td><td>Pakaian</td><td>Rp 350.000</td><td><strong>12</strong></td><td><button class="btn-action">Edit</button></td></tr>
-                        <tr><td>Topi Anti Panas</td><td>Aksesoris</td><td>Rp 50.000</td><td><strong>20</strong></td><td><button class="btn-action">Edit</button></td></tr>
-                        <tr><td>Tas Ransel Gaul</td><td>Tas</td><td>Rp 150.000</td><td><strong>8</strong></td><td><button class="btn-action">Edit</button></td></tr>
+                    <tbody id="tabel-barang">
+                        <!-- Data barang akan dimuat oleh JavaScript di sini -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FITUR 3: BUKU KAS (DENGAN FILTER TANGGAL) -->
+        <!-- FITUR 3: BUKU KAS -->
         <div id="fitur-kas" class="halaman-fitur">
             <h1 class="page-title">Buku Kas Uang</h1>
             <div class="table-container">
-                <h3>Catatan Keuangan Bulan Agustus 2026 💰</h3>
-                
-                <!-- Kotak Filter Tanggal -->
-                <div class="filter-box">
-                    <label><strong>Pilih Periode:</strong></label>
-                    <input type="date" id="tanggalMulai" class="input-drawn">
-                    <label>sampai</label>
-                    <input type="date" id="tanggalAkhir" class="input-drawn">
-                    <button class="btn-action" onclick="filterKas()">Cari Data 🔍</button>
-                    <button class="btn-action" style="background: white;" onclick="resetKas()">Reset</button>
-                </div>
-
-                <table id="tabel-kas">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Keterangan</th>
-                            <th>Uang Masuk</th>
-                            <th>Uang Keluar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- data-date dipakai Javascript untuk nge-filter tanggalnya -->
-                        <tr data-date="2026-08-01"><td>01/08/2026</td><td>Modal Awal Bulan</td><td class="teks-hijau">+ Rp 5.000.000</td><td>-</td></tr>
-                        <tr data-date="2026-08-03"><td>03/08/2026</td><td>Jual 2 Sepatu Lari</td><td class="teks-hijau">+ Rp 500.000</td><td>-</td></tr>
-                        <tr data-date="2026-08-05"><td>05/08/2026</td><td>Bayar Listrik & Internet</td><td>-</td><td class="teks-merah">- Rp 350.000</td></tr>
-                        <tr data-date="2026-08-07"><td>07/08/2026</td><td>Jual 1 Jaket</td><td class="teks-hijau">+ Rp 350.000</td><td>-</td></tr>
-                        <tr data-date="2026-08-12"><td>12/08/2026</td><td>Beli Lakban & Kardus Packing</td><td>-</td><td class="teks-merah">- Rp 50.000</td></tr>
-                        <tr data-date="2026-08-20"><td>20/08/2026</td><td>Jual 3 Topi, 1 Tas</td><td class="teks-hijau">+ Rp 300.000</td><td>-</td></tr>
-                        <tr data-date="2026-08-30"><td>30/08/2026</td><td>Gaji Admin Cantik</td><td>-</td><td class="teks-merah">- Rp 1.500.000</td></tr>
-                    </tbody>
-                </table>
-                <p id="pesan-kosong" style="display:none; text-align:center; padding:20px;">Wah, nggak ada catatan keuangan di tanggal segitu...</p>
+                <h3>Catatan Keuangan 💰</h3>
+                <p>Fitur kas sedang diistirahatkan sejenak.</p>
             </div>
         </div>
 
         <!-- FITUR 4: PESANAN MASUK -->
-        <div id="fitur-pesanan" class="halaman-fitur aktif">
+        <div id="fitur-pesanan" class="halaman-fitur">
             <h1 class="page-title">Cek Pesanan Pembeli</h1>
             <div class="table-container">
                 <h3>Daftar Pembelian Klien Baru 🛍️</h3>
@@ -190,27 +140,129 @@
             <h1 class="page-title">Data Suplier</h1>
             <div class="table-container">
                 <h3>Daftar Pemasok Barang 🚚</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nama Suplier</th>
-                            <th>Jenis Barang</th>
-                            <th>No. Telepon / WA</th>
-                            <th>Alamat Gudang</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Bang Jago Grosir</strong></td><td>Sepatu, Sandal</td><td>0812-3456-7890</td><td>Jl. Cibaduyut Raya No. 12</td></tr>
-                        <tr><td><strong>Toko Kain Mulus</strong></td><td>Jaket, Kaos, Topi</td><td>0898-7654-3210</td><td>Pasar Tanah Abang Blok B</td></tr>
-                        <tr><td><strong>Juragan Kardus</strong></td><td>Kardus Packing, Lakban</td><td>0855-1122-3344</td><td>Jl. Industri Ringan No. 5</td></tr>
-                    </tbody>
-                </table>
+                <p>Kontak suplier langganan.</p>
             </div>
         </div>
 
     </div>
 
+    <!-- MODAL UNTUK EDIT BARANG -->
+    <div id="modal-edit" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Edit Barang ✏️</h3>
+                <button class="btn-action" style="background: var(--crayon-red); color:white;" onclick="tutupModalEdit()">X</button>
+            </div>
+            <form onsubmit="simpanEditBarang(event)">
+                <input type="hidden" id="edit-id">
+                
+                <label>Nama Barang:</label>
+                <input type="text" id="edit-nama" class="input-drawn" style="margin-bottom: 10px;" required>
+                
+                <label>Kategori:</label>
+                <input type="text" id="edit-kategori" class="input-drawn" style="margin-bottom: 10px;" required>
+                
+                <label>Harga (Rp):</label>
+                <input type="number" id="edit-harga" class="input-drawn" style="margin-bottom: 15px;" required>
+                
+                <button type="submit" class="btn-action" style="width: 100%; background: var(--crayon-green);">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // --- DATA DEFAULT BARANG (Sama persis dengan user.html) ---
+        const defaultProducts = [
+            { id: 1, nama: "Sepatu Lari Kece", kategori: "Baju", harga: 250000, gambar: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" },
+            { id: 2, nama: "Tas Sekolah Gede", kategori: "Aksesoris", harga: 150000, gambar: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
+            { id: 3, nama: "Jam Tangan Robot", kategori: "Mainan", harga: 300000, gambar: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80" },
+            { id: 4, nama: "Set Krayon 24 Warna", kategori: "Alat Tulis", harga: 45000, gambar: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80" },
+            { id: 5, nama: "Buku Gambar A3", kategori: "Alat Tulis", harga: 35000, gambar: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=500&q=80" },
+            { id: 6, nama: "Topi Kelinci Hangat", kategori: "Aksesoris", harga: 85000, gambar: "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=500&q=80" },
+            { id: 7, nama: "Botol Minum Dinosaurus", kategori: "Aksesoris", harga: 60000, gambar: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&q=80" },
+            { id: 8, nama: "Pensil Mekanik Pro", kategori: "Alat Tulis", harga: 25000, gambar: "https://images.unsplash.com/photo-1585336261022-680e295ce3fe?w=500&q=80" },
+            { id: 9, nama: "Jaket Tebal Kuning", kategori: "Baju", harga: 180000, gambar: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80" },
+            { id: 10, nama: "Kotak Pensil Tingkat", kategori: "Alat Tulis", harga: 55000, gambar: "https://images.unsplash.com/photo-1590845947698-8924d7409b56?w=500&q=80" },
+            { id: 11, nama: "Papan Tulis Mini", kategori: "Alat Tulis", harga: 40000, gambar: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80" },
+            { id: 12, nama: "Ransel Astronot", kategori: "Aksesoris", harga: 200000, gambar: "https://images.unsplash.com/photo-1622560480654-d96214ebc8ce?w=500&q=80" }
+        ];
+
+        const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+
+        // --- FUNGSI LEMARI BARANG (RENDER & EDIT) ---
+        function dapatkanKatalog() {
+            // Cek apakah data barang sudah ada di localStorage, kalau belum pakai data default
+            let katalog = JSON.parse(localStorage.getItem('katalogRehanShop'));
+            if (!katalog || katalog.length === 0) {
+                katalog = defaultProducts;
+                localStorage.setItem('katalogRehanShop', JSON.stringify(katalog));
+            }
+            return katalog;
+        }
+
+        function muatBarang() {
+            const tbody = document.getElementById('tabel-barang');
+            const katalog = dapatkanKatalog();
+            tbody.innerHTML = '';
+            
+            katalog.forEach(barang => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${barang.gambar}" class="table-img" alt="${barang.nama}"></td>
+                        <td><strong>${barang.nama}</strong></td>
+                        <td>${barang.kategori}</td>
+                        <td>${formatRupiah(barang.harga)}</td>
+                        <td>
+                            <button class="btn-action" onclick="bukaModalEdit(${barang.id})">✏️ Edit</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function bukaModalEdit(id) {
+            const katalog = dapatkanKatalog();
+            const barang = katalog.find(b => b.id === id);
+            
+            // Isi form dengan data barang yang dipilih
+            document.getElementById('edit-id').value = barang.id;
+            document.getElementById('edit-nama').value = barang.nama;
+            document.getElementById('edit-kategori').value = barang.kategori;
+            document.getElementById('edit-harga').value = barang.harga;
+            
+            // Tampilkan Modal
+            document.getElementById('modal-edit').classList.remove('hidden');
+        }
+
+        function tutupModalEdit() {
+            document.getElementById('modal-edit').classList.add('hidden');
+        }
+
+        function simpanEditBarang(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-id').value);
+            const namaBaru = document.getElementById('edit-nama').value;
+            const kategoriBaru = document.getElementById('edit-kategori').value;
+            const hargaBaru = parseInt(document.getElementById('edit-harga').value);
+
+            let katalog = dapatkanKatalog();
+            
+            // Cari barangnya dan update datanya
+            const index = katalog.findIndex(b => b.id === id);
+            if (index !== -1) {
+                katalog[index].nama = namaBaru;
+                katalog[index].kategori = kategoriBaru;
+                katalog[index].harga = hargaBaru;
+                
+                // Simpan lagi ke localStorage
+                localStorage.setItem('katalogRehanShop', JSON.stringify(katalog));
+                
+                tutupModalEdit();
+                muatBarang(); // Refresh tabel
+                alert('Sip! Datanya udah berhasil diubah ^v^');
+            }
+        }
+
         // --- FUNGSI PINDAH HALAMAN ---
         function bukaFitur(namaFitur) {
             let semuaHalaman = document.querySelectorAll('.halaman-fitur');
@@ -261,46 +313,9 @@
             alert('Asyik! Barang udah meluncur ke pembeli! ^v^');
         }
 
-        // --- FUNGSI FILTER BUKU KAS ---
-        function filterKas() {
-            const mulai = document.getElementById('tanggalMulai').value;
-            const akhir = document.getElementById('tanggalAkhir').value;
-            const barisTabel = document.querySelectorAll('#tabel-kas tbody tr');
-            let adaData = false;
-
-            if (!mulai || !akhir) {
-                alert("Pilih tanggal mulai dan tanggal akhir dulu ya!");
-                return;
-            }
-
-            barisTabel.forEach(baris => {
-                const tanggalBaris = baris.getAttribute('data-date');
-                // Cek apakah tanggal di baris berada di antara tanggal mulai dan akhir
-                if (tanggalBaris >= mulai && tanggalBaris <= akhir) {
-                    baris.style.display = ''; // Munculkan baris
-                    adaData = true;
-                } else {
-                    baris.style.display = 'none'; // Sembunyikan baris
-                }
-            });
-
-            // Tampilkan pesan kalau filter kosong
-            document.getElementById('pesan-kosong').style.display = adaData ? 'none' : 'block';
-            document.getElementById('tabel-kas').style.display = adaData ? 'table' : 'none';
-        }
-
-        function resetKas() {
-            document.getElementById('tanggalMulai').value = '';
-            document.getElementById('tanggalAkhir').value = '';
-            const barisTabel = document.querySelectorAll('#tabel-kas tbody tr');
-            
-            barisTabel.forEach(baris => baris.style.display = ''); // Munculkan semua
-            document.getElementById('pesan-kosong').style.display = 'none';
-            document.getElementById('tabel-kas').style.display = 'table';
-        }
-
-        // Langsung panggil fungsi saat awal
+        // Langsung panggil fungsi saat halaman pertama kali dibuka
         muatPesanan();
+        muatBarang();
     </script>
 </body>
 </html>
